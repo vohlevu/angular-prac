@@ -1,0 +1,27 @@
+<script src="http://code.angularjs.org/1.2.0-rc.3/angular.min.js"></script>
+<script type="text/javascript">
+ 
+var app = angular.module('app', []);
+ 
+app.controller("MyController", function($scope){
+ 
+                    $scope.user = {
+ 
+                        diameter: 200,
+ 
+                            style:{},
+ 
+                     };
+ 
+});
+ 
+</script>
+<body ng-app=”app”>
+ 
+                  <div ng-controller=”MyController”>
+ 
+                  <p>{{user.diameter}}</p>
+ 
+                  </div>
+ 
+</body>
