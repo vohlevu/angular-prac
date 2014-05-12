@@ -1,0 +1,68 @@
+
+<!doctype html>
+    <html  >
+        <head>
+            <title>Angular tests</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <script src="http://code.angularjs.org/1.2.0-rc.3/angular.min.js"></script>
+            <style type="text/css">
+            #circle {
+                    border-radius: 50%;
+                    width: 200px;
+                    height: 200px;
+                    top:200px; 
+                    left:0px;
+                    background:red;
+                    position:absolute;
+                    transition:1s;
+                    -webkit-transition: 1s; /* Safari */
+                    max-width:400px;
+                    max-height:400px;
+
+                }
+            </style>
+            
+            <script type="text/javascript">
+             var app = angular.module('app', []);
+
+                app.controller("MyController", function($scope){
+                    $scope.user = { 
+                        diameter : 200,
+                        pos:{x:1,y:1},
+                        style:{},
+
+                     };
+                    $scope.calcStyle = function(user){
+                       user.style = {'width':user.diameter+'px','height':user.diameter+'px','left':user.pos.x+'px','top':parseInt(user.pos.y)+200+'px'}
+                     
+                    };
+                    $scope.changeCss = function(user) {
+                        return user.style;
+                    }
+                });
+                
+                app.directive('myPopos', function() {
+                return {
+                  template: 'Pos X: {{user.pos.x}} Pos Y: {{user.pos.y}} Diameter: {{user.diameter}}',
+                  
+                }});
+               
+            </script>
+	</head>
+    <body >
+        <div ng-app="app" ng-controller="MyController">
+            Diameter:<input type="range" ng-model="user.diameter" ng-change="calcStyle(user)" min="1" max="400" /><br>
+            Position X:<input type="range" ng-model="user.pos.x" ng-change="calcStyle(user)" min="1" max="400" /><br>
+            Position Y:<input type="range" ng-model="user.pos.y" ng-change="calcStyle(user)" min="1" max="200" /><br>
+            <p>myStyle={{user.style}}</p>
+            <p my-popos></p>
+        
+        <div id='container'>
+            <div id='circle' ng-style='changeCss(user)'>
+              
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>    

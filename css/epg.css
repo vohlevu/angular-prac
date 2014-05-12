@@ -1,0 +1,391 @@
+@charset "utf-8";
+/* CSS Document */
+
+#epgWrap {
+	background: url(../images/epg/BG.png) no-repeat;
+	width: 1280px;
+	height: 720px;
+	
+}
+#epgDayTime{
+	position: absolute;
+	width:300px;
+	top: 615px;
+	right:90px;
+	color: #7a7a7a;
+	text-align: right;
+}
+
+#epgDayTime #epgDay{
+	font-size: 22px;
+	padding-right: 2px;
+}
+
+#epgDayTime #epgTime{
+	font-size: 45px;
+	line-height:25px;
+}
+/*=========================== TOP INFO =========================*/
+#epgInfoTop{
+	width: 755px; position: absolute; top: 70px; left: 410px;
+	font-size: 22px; color: white;  line-height:30px; 
+	overflow: hidden; white-space: nowrap;
+	padding-top:5px;
+}
+#epgNameChannel{
+	float: left;
+	width: 550px;
+}
+#epgTimeShowProgram{
+	float: left;
+	width: 300px;
+	font-size: 20px;
+	color: #7a7a7a;
+}
+#epgNameProgram{
+	float: left;
+	width: 755px;
+	font-size: 20px;
+	color: #7a7a7a;
+	margin-top:5px;
+}
+#epgInfoLine {
+	margin-top:35px;
+	background: url(../images/epg/line.png) no-repeat center;
+	height: 1px; width: 755px;
+}
+#epgInfoChannel {
+	position: absolute;
+	right:0px;top:5px;
+	height: 30px; width: 200px;
+}
+#epgDolby {
+	background: url(../images/epg/icon_dolby.png) no-repeat center;
+	width: 40px; height: 29px;
+	float: right;
+	margin-left: 5px;
+}
+#epgStereo {
+	background: url(../images/epg/icon_stereo.png) no-repeat center;
+	width: 53px; height: 29px;
+	float: right;
+	margin-left: 5px;
+}
+#epgMPEG1 {
+	background: url(../images/epg/icon_MP1.png) no-repeat center;
+	width: 60px; height: 29px;
+	float: right;
+	margin-left: 5px;
+}
+#epgMPEG2 {
+	background: url(../images/epg/icon_MP2.png) no-repeat center;
+	width: 60px; height: 29px;
+	float: right;
+	margin-left: 5px;
+}
+#epgMPEG4 {
+	background: url(../images/epg/icon_MP4.png) no-repeat center;
+	width: 59px; height: 29px;
+	float: right;
+	margin-left: 5px;
+}
+#epgH264 {
+	background: url(../images/epg/icon_H264.png) no-repeat center;
+	width: 53px; height: 29px;
+	float: right;
+	margin-left: 5px;
+}
+#epgHD {
+	background: url(../images/epg/icon_HD.png) no-repeat center;
+	width: 41px; height: 29px;
+	float: right;
+	margin-left: 5px;
+}
+#epgSD {
+	background: url(../images/epg/icon_SD.png) no-repeat center;
+	width: 41px; height: 29px;
+	float: right;
+	margin-left: 5px;
+}
+
+#epgBoxDay{
+	position: absolute;	top: 270px; left: 290px; width: 300px;
+	margin: 0px;padding: 0px;text-align: left;
+	font-size: 24px;line-height:25px;
+	color: #7a7a7a;
+}
+/*=========================== LIST LEFT =========================*/
+#epgBoxLeft {
+	position:absolute; top: 320px; left: 50px;
+}
+
+#epgListLeft{
+	position: absolute; font-size: 20px; color: white;
+	list-style: none; width: 200px; height: 300px; overflow:hidden;	padding: 0px;
+}
+
+.epgItemListLeft{
+	height: 52px; width: 200px;
+	padding: 0px; margin: 5px 0px 0px 0px;
+	background: url(../images/epg/bar.png) no-repeat center;
+	background-size:200px 52px;
+}
+
+.epgItemListLeft p{
+	height: 50px;
+	padding-left: 20px;
+	padding-right: 10px;
+	line-height:50px;	white-space: nowrap;
+}
+
+#epgListLeft .epgCurItemLeftChoose{
+	/*background: url(../images/epg/TV_icon.png) no-repeat; background-position: 0px 8px;font-size: 24px;*/
+}
+
+#epgListLeft .epgFocusItemListLeft{
+	background: url(../images/epg/left_cursor.png) no-repeat center;
+}
+/*=========================== LIST RIGHT =========================*/
+#epgBoxRight {
+	position:absolute; top: 320px; left: 285px;
+}
+
+#epgListRight{
+	position: absolute; font-size: 20px; color: #7a7a7a;
+	list-style: none; width: 900px; height: 300px; overflow:hidden;	padding: 0px;
+}
+
+.epgItemListRight{
+	width: 900px; height: 52px;
+	padding: 0px; margin: 5px 0px 0px 0px;
+	line-height:50px; white-space: nowrap;
+	background: url(../images/epg/bar_2.png) no-repeat center;
+	background-size:900px 52px;
+}
+
+.epgItemListRight .epgTimeProgram{
+	float: left; margin: 0px 0px 0px 20px;
+}
+.epgItemListRight .epgNameProgram{
+	float: left; margin: 0px 0px 0px 40px; width: 600px;
+}
+
+#epgListRight .epgFocusItemListRight{
+	background: url(../images/epg/right_cursor.png) no-repeat center;
+}
+
+#epgWrap .epgDimList{
+	color: #7a7a7a;
+}
+
+#epgWrap .epgFocusList{
+	color: white;
+}
+/*=========================== NARROW =========================*/
+#epgChannelNarrowUp {
+	background: url(../images/epg/narrow_up.png) no-repeat center;
+	height: 24px; width: 45px;
+	position:absolute;
+	top:303px;
+	left:130px;
+}
+#epgChannelNarrowDown {
+	background: url(../images/epg/narrow_down.png) no-repeat center;
+	height: 24px; width: 38px;
+	position:absolute;
+	top:604px;
+	left:130px;
+}
+#epgProgramNarrowUp {
+	background: url(../images/epg/narrow_up.png) no-repeat center;
+	height: 24px; width: 45px;
+	position:absolute;
+	top:303px;
+	left:716px;
+	display:none;
+}
+#epgProgramNarrowDown {
+	background: url(../images/epg/narrow_down.png) no-repeat center;
+	height: 24px; width: 38px;
+	position:absolute;
+	top:604px;
+	left:716px;
+	display:none;
+}
+/*=========================== BOTTOM INFO =========================*/
+
+#epgPvr{
+	 position: absolute;
+	 width: 270px; height: 90px; top: 250px; left: 900px;
+	 font-size: 18px; color: white; 
+	 /*overflow: hidden; */padding: 0px 0px 0px 0px;
+	//border:1px solid red;
+	display: none;
+}
+
+#epgPvr #epgButtonRed{
+	position: absolute;
+	top: 45px;
+	width: 53px;
+	height: 32px;
+}
+#epgPvr #epgTextButtonRed{
+	position: absolute;
+	top: 42px;
+	left: 60px;
+	width: 210px;
+	height: 32px;
+	text-align: left;
+	font-size: 18px;
+	color: #6d6d6d; 
+	white-space: nowrap;
+}
+.checkPvrIcon{
+	//position: absolute;
+	background: url(../images/epg/pvr.png) no-repeat;	
+	top: 10px;
+	width: 37px;
+	height: 30px;
+	margin-top: 10px;
+	margin-left: -5px;
+	//border:1px solid red;
+	display: none;
+}
+
+
+/* message */
+
+	#Confirm{
+		position: absolute;
+		width: 640px;
+		height: 130px;
+		margin: 250px 0 0 315px;
+		background: url(../images/Setting/caution/box%202.png) no-repeat;
+		background-size:640px 130px;
+	}
+
+	#Confirm #BackGroundMess {
+		width: 100%;
+		height: 100%;
+		position: relative;
+		margin: auto;
+	}
+
+	#Confirm #BackGroundMess #StrMess{
+		width: 100%;
+		height: 20%;
+		position: absolute;
+		color: white;
+		font-size: 20px;
+		text-align: center;
+		top: 14px;
+	}
+	
+	#Confirm #BackGroundMess #StrMess1{
+		width: 100%;
+		height: 20%;
+		position: absolute;
+		color: white;
+		font-size: 20px;
+		text-align: center;
+		top: 68px;
+	}
+
+	#Confirm #BackGroundMess #StrOk{
+		width: 134px;
+		height: 50px;
+		font-size: 20px;
+		position: absolute;
+		text-align: center;
+		top: 60px;
+		left: 243px;
+		background: url(../images/Setting/caution/button.png) no-repeat;
+		background-size:134px 50px;
+		display:-webkit-box;
+		-webkit-box-orient:vertical;
+        -webkit-box-pack:center;
+        -webkit-box-align:center;
+	}
+	#Confirm #BackGroundMess #FocusOk{
+		width: 134px;
+		height: 50px;
+		position: absolute;
+		top: 60px;
+		left: 243px;
+	}
+/*=========================== DESCRIPTION =========================*/
+#epgProgramDescription {
+	background: url(../images/epg/dim.png) no-repeat;
+	width: 1280px;
+	height: 720px;
+	position:absolute;
+	top:0px;
+	left:0px;
+	display:none;
+}
+#epgProgramDescription #epgProgramDescriptionInfo{
+	background: url(../images/epg/BG_description.png) no-repeat;
+	width: 565px; height: 400px; position: absolute; top: 180px; left: 350px;
+	font-size: 20px; color: #7a7a7a; line-height:30px; 
+	overflow: hidden; white-space: nowrap; padding: 45px;
+}
+#epgProgramDescription #epgProgramDescriptionNameChannel{
+	float: left; font-size: 22px; color: white;
+	width: 565px;
+}
+#epgProgramDescription #epgProgramDescriptionTimeProgram{
+	float: left;
+	width: 400px;
+}
+#epgProgramDescription #epgProgramDescriptionNameProgram{
+	float: left;
+	width: 565px;
+}
+#epgProgramDescription #epgProgramDescriptionProgram{
+	float: left;
+	width: 565px;
+	height: 170px;
+	margin-top:30px; white-space: normal;
+}
+#epgProgramDescription #epgProgramDescriptionLine {
+	margin-top:62px;
+	background: url(../images/epg/line_2.png) no-repeat center;
+	height: 5px; width: 566px;
+}
+#epgProgramDescription #epgProgramDescriptionInfoChannel {
+	position: absolute;
+	right:45px;
+	top:73px;
+	height: 30px; width: 300px;
+}
+/*=========================== GUIDE =========================*/
+#epgGuide{
+	position: absolute;
+	top: 285px;
+	right:95px;
+	height: 30px; width: 350px;
+	display:none;
+}
+#epgGuide p {
+	font-size: 18px; color: #7a7a7a;
+	float: right;
+	margin-left: 9px;
+}
+#epgGuide #epgButtonPrevious {
+	background: url(../images/epg/button_previous.png) no-repeat center;
+	width: 45px; height: 23px;
+	float: right;
+	margin-top: 7px;
+	margin-left: 9px;
+	display:none;
+}
+#epgGuide #epgTextPrevious {
+	display:none;
+}
+#epgGuide #epgButtonNext {
+	background: url(../images/epg/button_next.png) no-repeat center;
+	width: 45px; height: 23px;
+	float: right;
+	margin-top: 7px;
+	margin-left: 9px;
+}
