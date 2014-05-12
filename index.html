@@ -1,27 +1,29 @@
-<script src="http://code.angularjs.org/1.2.0-rc.3/angular.min.js"></script>
-<script type="text/javascript">
- 
-var app = angular.module('app', []);
- 
-app.controller("MyController", function($scope){
- 
-                    $scope.user = {
- 
-                        diameter: 200,
- 
-                            style:{},
- 
-                     };
- 
-});
- 
-</script>
-<body ng-app=”app”>
- 
-                  <div ng-controller=”MyController”>
- 
-                  <p>{{user.diameter}}</p>
- 
-                  </div>
- 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/epg.css" type="text/css" />
+<title>AngularJS Practice</title>
+
+</head>
+
+<body >
+<div id="Wrapper">
+	<div id="ColdPage"></div>
+</div>
+
+<script type="text/javascript" language="javascript" src="js/jq/jquery-1.7.2.js"></script> <!---->
+<script type="text/javascript" language="javascript" src="js/jq/gtvcore.js"></script> 
+<script type="text/javascript" language="javascript" src="js/jq/keycontrol.js"></script>
+<script type="text/javascript" language="javascript" src="js/jq/hmac-md5.js"></script>
+<script type="text/javascript" language="javascript" src="js/jq/jquerysession.js"></script>
+<script type="text/javascript" language="javascript" src="js/jq/timezonedb.js"></script>
+<script type="text/javascript" language="javascript" src="js/jq/online.js"></script>
+<script type="text/javascript" language="javascript" src="js/DefineKeyControl.js"></script>
+<script type="text/javascript" language="javascript" src="js/Authentication.js"></script>
+<script type="text/javascript" language="javascript" src="js/jsExtensions.js"></script>
+<script type="text/javascript" language="javascript" src="js/Epg.js"></script>
+<script type="text/javascript" language="javascript" src="js/index.js"></script>
 </body>
+</html>
