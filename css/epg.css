@@ -144,6 +144,7 @@
 
 #epgListLeft .epgFocusItemListLeft{
 	background: url(../images/epg/left_cursor.png) no-repeat center;
+	background-size:200px 52px;
 }
 /*=========================== LIST RIGHT =========================*/
 #epgBoxRight {
@@ -172,6 +173,7 @@
 
 #epgListRight .epgFocusItemListRight{
 	background: url(../images/epg/right_cursor.png) no-repeat center;
+	background-size:900px 52px;
 }
 
 #epgWrap .epgDimList{

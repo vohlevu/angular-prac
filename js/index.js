@@ -10,13 +10,18 @@ function Main (){
     oMain.coldPageElement     = oMain.parentPageElement.children('div').eq(0);
     oMain.stackInfoPage       = [];           // stack
 	
+	oMain.isInitDTV = false;
+	oMain.isInitDTVAmp = false;
+	
 	oMain.start = function (){ 
 		Authentication.Debug("####--------oMain.start ... ");
 		oMain.setKeyControl();
 		oJSExtensions.init();
 		oJSExtensions.start();
-		var oHomePage = new Epg();
-		var item = $("<div></div>").data("url",oHomePage).data('type','object');
+		var oVietnamTV = new VietnamTV();
+		oVietnamTV.start();
+		var oEpg = new Epg(oVietnamTV);
+		var item = $("<div></div>").data("url",oEpg).data('type','object');
 		oMain.transitionPage(item,oMain.coldPageElement);
 	};
 

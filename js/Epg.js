@@ -34,7 +34,7 @@ function Epg(oTV){
 	var dateCurrent;
 
 oEpg.start = function (MainPage){
-	var iCurrChannel = 0;//oVietnamTV.getCurrChannel();
+	var iCurrChannel = oVietnamTV.getCurrChannel();
 	if (undefined == iCurrChannel) {
 		Authentication.Debug("EPG >> >>> NOT READY");
 		setTimeout(function(){
@@ -65,17 +65,23 @@ oEpg.start = function (MainPage){
 	oEpg.showHeaderDayTime(dateCurrent);	//set time
 	
 	oEpg.autoUpdateEPG();
-	setTimeout(function(){
-		if (aChannelListLeft.Data[iCurrChannel].isDTVChannel) {
-			oJSExtensions.epg_obj.SetWndRect(71, 68, 306, 174);
-			oJSExtensions.epg_obj.setEpgGetMode(3);
+	_executeChannelEpg = setInterval(function(){
+		if (!bInitEpg) {
+			clearInterval(_executeChannelEpg);
+			if (aChannelListLeft.Data[iCurrChannel].isDTVChannel) {
+				oJSExtensions.epg_obj.SetWndRect(71, 68, 306, 174);
+				oJSExtensions.epg_obj.setEpgGetMode(3);
+			}
+			// Only set 1 time for OTT channel
+			oJSExtensions.mediasetting.setScale(3, 71, 68, 306, 174);
+			oEpg.setKeyControlEpg();
+		} else {
+			Authentication.Debug("EPG >> loop setKeyControlEpg <<<<<<");
 		}
-		// Only set 1 time for OTT channel
-		oJSExtensions.mediasetting.setScale(3, 71, 68, 306, 174);
-		oEpg.setKeyControlEpg();
 	},500);
 	
 	getTimeInterval = setInterval(function(){
+								Authentication.Debug("EPG >> getTimeInterval >> " + dateCurrent.toString());
 								dateCurrent.setMinutes(dateCurrent.getMinutes() + 1);
 								oEpg.showHeaderDayTime(dateCurrent);	//set time
 							},60000);
@@ -130,7 +136,7 @@ oEpg.makePage = function (){
 	oEpg.pageElement.append(html);
 	oMain.coldPageElement.append(oEpg.pageElement);
 };
-
+	
 oEpg.removeZone = function(zone){
 	oMain.keyController.removeBehaviorZone(zone);
 };
@@ -448,6 +454,7 @@ oEpg.setKeyControlEpg = function(){
 										        useGeometry 		: false
 										      });
   	oMain.keyController.addBehaviorZone(oEpg.homeBehaviorZone, true);
+	oMain.keyController.setZone(oEpg.homeBehaviorZone,true);
   	oMain.keyController.start();
 };
 
@@ -701,7 +708,8 @@ var iCountInProgramList;
 
 var itemCurRightFocus;
 oEpg.startBoxRight = function(){
-	itemCurLeftFocus.css('background','url(images/epg/left_cursor_selected.png) no-repeat center');
+	itemCurLeftFocus.css({'background':'url(images/epg/left_cursor_selected.png) no-repeat center',
+						'background-size':'200px 52px'});
 	Def_EleLeftZone.addClass(Def_NameClassDimList);
 	Def_EleRightZone.addClass(Def_NameClassFocusList);
 	oEpg.showHideNarrow(false);
@@ -844,12 +852,12 @@ oEpg.setKeyControlBoxRight = function (){
 			oEpg.executeDownProgramList();
 			return { status: 'none' };
 		};	
-		aKeyMapping[Key.PREV] 	= 	function(oldItem, newItem) {
+		aKeyMapping[Key.LEFT] 	= 	function(oldItem, newItem) {
 			Authentication.Debug("EPG >> handle program __ key.LEFT");
 			oEpg.executeLeftFocusDays();
 			return { status: 'none' };
 		};	
-		aKeyMapping[Key.NEXT] 	= 	function(oldItem, newItem) {
+		aKeyMapping[Key.RIGHT] 	= 	function(oldItem, newItem) {
 			Authentication.Debug("EPG >> handle program __ key.RIGHT");
 			oEpg.executeRightFocusDays();
 			return { status: 'none' };
