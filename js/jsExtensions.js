@@ -29,6 +29,7 @@ function jsdtvepg(){
 	oJsdtvepg.showEPG = function (){
 		Authentication.Debug(">>>> oMediasetting.showEPG <<<<<<");
 		countCheckUpdateEvent = 0;
+		main.isInitDTVAmp = true;
 	};
 	oJsdtvepg.getTime = function (){
 		Authentication.Debug(">>>> oMediasetting.getTime <<<<<<");
@@ -53,8 +54,35 @@ function jsdtvepg(){
 				"|||13|||";
 		return str;
 	};
-	oJsdtvepg.SetWndRect = function (){
+	oJsdtvepg.SetWndRect = function (x, y, width, height){
 		Authentication.Debug(">>>> oMediasetting.SetWndRec <<<<<<");
+		$('#epgWrap #epgVideo').css({'top':y,
+								'left':x,
+								'width':width,
+								'height':height});
+	};
+	oJsdtvepg.executeKey = function (index){
+		Authentication.Debug(">>>> oMediasetting.executeKey <<<<<< " + index);
+		var strSrc;
+		switch(index){
+			case 0:
+				strSrc = "http://mp3.zing.vn/embed/video/ZW6AC6OO?autostart=true";
+				break;
+			case 1:
+				strSrc = "http://mp3.zing.vn/embed/video/ZWZF6UAC?autostart=true";
+				break;
+			case 2:
+				strSrc = "http://mp3.zing.vn/embed/video/ZW6779W7?autostart=true";
+				break;
+			case 3:
+				strSrc = "http://mp3.zing.vn/embed/video/ZW6990AZ?autostart=true";
+				break;
+			default:
+				strSrc = "http://mp3.zing.vn/embed/video/ZW6ACUDO?autostart=true";
+				break;
+		}
+		$('#epgWrap #epgVideo').attr('src', strSrc);
+		return true;
 	};
 	oJsdtvepg.setEpgGetMode = function (){
 		Authentication.Debug(">>>> oMediasetting.setEpgGetMode <<<<<<");

@@ -69,11 +69,12 @@ oEpg.start = function (MainPage){
 		if (!bInitEpg) {
 			clearInterval(_executeChannelEpg);
 			if (aChannelListLeft.Data[iCurrChannel].isDTVChannel) {
-				oJSExtensions.epg_obj.SetWndRect(71, 68, 306, 174);
+				oJSExtensions.epg_obj.SetWndRect(70, 68, 306, 174);
 				oJSExtensions.epg_obj.setEpgGetMode(3);
 			}
+			oJSExtensions.epg_obj.executeKey(iCurrChannel);
 			// Only set 1 time for OTT channel
-			oJSExtensions.mediasetting.setScale(3, 71, 68, 306, 174);
+			oJSExtensions.mediasetting.setScale(3, 70, 68, 306, 174);
 			oEpg.setKeyControlEpg();
 		} else {
 			Authentication.Debug("EPG >> loop setKeyControlEpg <<<<<<");
@@ -90,6 +91,7 @@ oEpg.start = function (MainPage){
 oEpg.makePage = function (){
 	//Authentication.Debug("EPG >>  makePage");
 	var html =  '<div id="epgWrap">'+
+					'<iframe id="epgVideo" frameborder="0" allowfullscreen="true"></iframe>'+
 					'<div id="epgBoxLeft">'+
 						'<ul id="epgListLeft"></ul>'+
 					'</div><!-- end epgBoxLeft -->'+
@@ -653,7 +655,7 @@ oEpg.checkPlayChannel = function(){
 					if (aChannelListLeft.Data[iCurrChannel].isDTVChannel == false) {
 						oJSExtensions.dtvplayback_obj.switchToMainVideoScaler(0);
 					}
-					oUserSetting.saveConf("current_major_minor", aChannelListLeft.Data[iIndex].major_minor);
+					//oUserSetting.saveConf("current_major_minor", aChannelListLeft.Data[iIndex].major_minor);
 					oVietnamTV.setCurrChannel(iIndex);
 					oJSExtensions.epg_obj.setEpgGetMode(3);
 				}
@@ -677,7 +679,7 @@ oEpg.checkPlayChannel = function(){
 
 var timeoutSetScreenRectangle = null;
 oEpg.setScreenRectangle = function(){
-	oJSExtensions.epg_obj.SetWndRect(71, 68, 306, 174);
+	oJSExtensions.epg_obj.SetWndRect(70, 68, 306, 174);
 };
 /*
 oEpg.changeChannel = function(){

@@ -1,9 +1,11 @@
 function VietnamTV (){
 	var oVietnamTV = this;
 	var oDataFavoriteChannels	= new Object();
+	var iCurrChannel;
 	
 	oVietnamTV.start = function(){
 		oVietnamTV.loadFavoriteChannels();
+		iCurrChannel = 0;
 	};
 
 	oVietnamTV.loadFavoriteChannels = function(){
@@ -39,11 +41,12 @@ function VietnamTV (){
 	};
 	
 	oVietnamTV.getCurrChannel = function(){
-		Authentication.Debug(">>>> oVietnamTV.getCurrChannel <<<<<<");
-		return 0;
+		Authentication.Debug(">>>> oVietnamTV.getCurrChannel <<<<<< iCurrChannel:" + iCurrChannel);
+		return iCurrChannel;
 	};
 	
 	oVietnamTV.setCurrChannel = function(i){
-		Authentication.Debug(">>>> oVietnamTV.setCurrChannel <<<<<<");
+		Authentication.Debug(">>>> oVietnamTV.setCurrChannel <<<<<< iCurrChannel:" + iCurrChannel);
+		iCurrChannel = i;
 	};
 }
