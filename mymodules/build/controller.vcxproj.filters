@@ -4,16 +4,22 @@
     <Filter Include="..">
       <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\binding.gyp">
-      <Filter>..</Filter>
-    </None>
-    <ClCompile Include="..\dtvcontroller.cpp">
-      <Filter>..</Filter>
-    </ClCompile>
     <ClCompile Include="..\controller.cpp">
       <Filter>..</Filter>
     </ClCompile>
+    <ClCompile Include="..\dtvcontroller.cpp">
+      <Filter>..</Filter>
+    </ClCompile>
+    <None Include="..\binding.gyp">
+      <Filter>..</Filter>
+    </None>
   </ItemGroup>
 </Project>

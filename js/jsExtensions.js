@@ -6,25 +6,40 @@ oJSExtensions.epg_obj					= null;
 
 
 oJSExtensions.init = function () {
-	oJSExtensions.mediasetting = new jsmediasetting();
-	oJSExtensions.epg_obj = new jsdtvepg();
-	oJSExtensions.dtvplayback_obj = new jsdtvplayback();
+	oJSExtensions.mediasetting = new jsmediasetting(oJSExtensions);
+	oJSExtensions.epg_obj = new jsdtvepg(oJSExtensions);
+	oJSExtensions.dtvplayback_obj = new jsdtvplayback(oJSExtensions);
 };
 
 oJSExtensions.start = function () {
 	
 };
 
-oJSExtensions.setEncoderAspectRatio = function (strValue) {
-	
+oJSExtensions.send = function (obj, func) {
+	var data = {
+					'obj' 	: obj,
+					'func' : func
+				};
+	var result;
+	$.ajax({
+		type: 'POST',
+		url: location.href,
+		data: data,
+		dataType: 'json',
+		async:false,
+		success: function(resultData) {
+			if (resultData.status == "OK")
+				result = resultData.result;
+		}
+	});
+	Authentication.Debug(">>>> oJSExtensions.send <<<<<< " + result);
+	return result;
 };
 
-oJSExtensions.setLPBIndexMode = function (iValue) {
-	
-};
-
-function jsdtvepg(){
+function jsdtvepg(ext){
 	var oJsdtvepg = this;
+	var extensions = ext;
+	var TAG = "jsdtvepg";
 	var countCheckUpdateEvent;
 	oJsdtvepg.showEPG = function (){
 		Authentication.Debug(">>>> oMediasetting.showEPG <<<<<<");
@@ -33,7 +48,8 @@ function jsdtvepg(){
 	};
 	oJsdtvepg.getTime = function (){
 		Authentication.Debug(">>>> oMediasetting.getTime <<<<<<");
-		return "23/34/6/11/2007";
+		return extensions.send(TAG,"getTime");
+		//return "23/34/6/11/2007";
 	};
 	oJsdtvepg.getInfo = function (){
 		Authentication.Debug(">>>> oMediasetting.getInfo <<<<<<");

@@ -25,6 +25,7 @@ public :
 	int 			Init();
 	int 			DeInit();
 	int 			TestJson();
+	char*			GetTime();
 
 };
 

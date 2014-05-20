@@ -81,6 +81,13 @@ int CDtvCtrl::DeInit()
 	return err;
 }
 
+char* CDtvCtrl::GetTime() {
+	char time[20];
+	strcpy(time, "23/34/6/11/2007");
+	printf("\n================CDtvCtrl::getTime=========================== %s\n\n", time);
+	return time;
+}
+
 int CDtvCtrl::TestJson()
 {
 	string json_example = "{\"array\": \
