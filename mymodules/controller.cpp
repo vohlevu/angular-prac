@@ -51,6 +51,7 @@ void init() {
 	if (!m_cDtvCtrl) {
 		m_cDtvCtrl = new CDtvCtrl();
 		m_cDtvCtrl->Init();
+		printf("\n TEST JSON >>> %s \n\n", m_cDtvCtrl->TestJson()==0?"SUCCESS":"FAIL");
 	}
 }
 

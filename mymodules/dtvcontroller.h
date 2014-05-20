@@ -24,6 +24,7 @@ public :
 	//init and deinit
 	int 			Init();
 	int 			DeInit();
+	int 			TestJson();
 
 };
 
