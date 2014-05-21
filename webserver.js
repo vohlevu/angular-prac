@@ -8,7 +8,7 @@ var http = require("http");
 var path = require("path"); 
 var fs = require("fs");
 var querystring = require('querystring');
-var controller = require('./mymodules/build/Release/controller');
+var controller = require('./mymodules/bin/controller');
 
 console.log("Starting web server at " + serverUrl + ":" + port);
 
