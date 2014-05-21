@@ -7,9 +7,9 @@
 #include "sqlite/sqlite3.h"
 
 #define DATABASE_PATH 		"../userdata/data_sample_utf8.db"
-#define RMstatus 		int
-#define RM_OK 			1
-#define RM_ERROR 		0
+#define RMstatus 		bool
+#define RM_OK 			true
+#define RM_ERROR 		false
 
 using namespace std;
 

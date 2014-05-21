@@ -5,7 +5,8 @@
       "sources": [ "controller.cpp",
 					"dtvcontroller.cpp",
 					"./src/database.cpp",
-					"./src/zenotimer.cpp" ],
+					"./src/zenotimer.cpp",
+					"./src/dtvutility.cpp" ],
 		"include_dirs": [
 			"include"],
 		"libraries": [
