@@ -66,7 +66,7 @@ Handle<Value> getTime(const Arguments& args) {
 
 void RegisterModule(Handle<Object> target) {
 	init();
-	initDatabase();
+	//initDatabase();
     target->Set(String::NewSymbol("fibonacci"),
         FunctionTemplate::New(Fibonacci)->GetFunction());
     target->Set(String::NewSymbol("getTime"),

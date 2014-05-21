@@ -4,7 +4,8 @@
       "target_name": "controller",
       "sources": [ "controller.cpp",
 					"dtvcontroller.cpp",
-					"./src/database.cpp" ],
+					"./src/database.cpp",
+					"./src/zenotimer.cpp" ],
 		"include_dirs": [
 			"include"],
 		"libraries": [

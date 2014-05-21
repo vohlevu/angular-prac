@@ -32,6 +32,9 @@ size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream);
 CDtvCtrl::CDtvCtrl()
 {
 	printf("CDtvCtrl::CDtvCtrl \n");
+	if (!m_pCTimer) {
+		m_pCTimer = new CTimer();
+	}
 }
 
 /******************************************************************************
@@ -87,10 +90,14 @@ int CDtvCtrl::DeInit()
 }
 
 char* CDtvCtrl::GetTime() {
-	char time[20];
-	strcpy(time, "23/34/6/11/2007");
-	printf("\n================CDtvCtrl::getTime=========================== %s\n\n", time);
-	return time;
+	/*char time[20];
+	strcpy(time, "23/34/6/11/2007");*/
+	char buffer [80];
+	struct tm timeinfo;
+	m_pCTimer->GetSystemTime(&timeinfo);
+	strftime (buffer,80,"Now it's %y/%m/%d.",&timeinfo);
+	printf("\n================CDtvCtrl::getTime=========================== %s\n\n", buffer);
+	return buffer;
 }
 
 int CDtvCtrl::TestJson()

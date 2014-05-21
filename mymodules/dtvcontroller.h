@@ -6,16 +6,17 @@
 #define __DTV_CONTROLLER__H_
 
 #include <iostream>
+#include "include/zenotimer.h"
 using namespace std;
 class CDtvCtrl
 {
 /********** variables *************/
 private:
-	int 		 m_uiTunerNum;
+	
 
 protected:
 	
-	int		m_uiTotalPlayer;
+	CTimer		*m_pCTimer;
 
 public :
 	CDtvCtrl();
