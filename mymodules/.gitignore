@@ -1,3 +1,4 @@
 *.sdf
 *.tlog
 build
+*.msi

@@ -52,27 +52,14 @@ void init() {
 		m_cDtvCtrl = new CDtvCtrl();
 		m_cDtvCtrl->Init();
 		//printf("\n TEST JSON >>> %s \n\n", m_cDtvCtrl->TestJson()==0?"SUCCESS":"FAIL");
+		m_cDtvCtrl->TestCurl();
 	}
-}
-
-Handle<Value> getTime(const Arguments& args) {
-    HandleScope scope;
-	printf("\n================Handle<Value> getTime===========================\n");
-	char* time = m_cDtvCtrl->GetTime();
-	/*if (!m_cDtvCtrl) {
-		time = m_cDtvCtrl->GetTime();
-	} else {
-		strcpy(time, "undefined");
-	}*/
-	return scope.Close(String::New(time));
 }
 
 void RegisterModule(Handle<Object> target) {
 	init();
     target->Set(String::NewSymbol("fibonacci"),
         FunctionTemplate::New(Fibonacci)->GetFunction());
-    target->Set(String::NewSymbol("getTime"),
-        FunctionTemplate::New(getTime)->GetFunction());
 }
 
 NODE_MODULE(controller, RegisterModule);

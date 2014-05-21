@@ -7,7 +7,8 @@
 		"include_dirs": [
 			"include"],
 		"libraries": [
-			"-l../libs/json_vc10_libmt.lib"]
+			"-l../libs/json_vc10_libmt.lib",
+			"-l../libs/libcurl.lib"]
     }
   ]
 }

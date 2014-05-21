@@ -26,6 +26,7 @@ public :
 	int 			DeInit();
 	int 			TestJson();
 	char*			GetTime();
+	int 			TestCurl();
 
 };
 
