@@ -55,7 +55,8 @@ Handle<Value> Fibonacci(const Arguments& args) {
 Handle<Value> getTime(const Arguments& args) {
 	HandleScope scope;
 	printf("\n================Handle<Value> getTime===========================\n");
-	char* time = m_cDtvCtrl->GetTime();
+	char time[DATETIME_SLEN];
+	strcpy(time, m_cDtvCtrl->GetUnixTime());
 	/*if (!m_cDtvCtrl) {
 		time = m_cDtvCtrl->GetTime();
 	} else {

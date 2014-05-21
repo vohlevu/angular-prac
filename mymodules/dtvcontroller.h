@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "include/zenotimer.h"
+#define DATETIME_SLEN		20
 using namespace std;
 class CDtvCtrl
 {
@@ -27,6 +28,7 @@ public :
 	int 			DeInit();
 	int 			TestJson();
 	char*			GetTime();
+	char*			GetUnixTime();
 	int 			TestCurl();
 
 };

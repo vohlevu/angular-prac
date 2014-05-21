@@ -80,7 +80,7 @@ void CTimer::Init()
 * @return
 *	RM_OK if success. Otherwise RM_ERROR
 */
-int CTimer::GetSystemUnixTime(struct tm* pDt)
+int CTimer::GetSystemUnixTime(struct tm& pDt)
 {
 	struct timeval2 tv;
 	struct timezone2 tz;
@@ -91,15 +91,15 @@ int CTimer::GetSystemUnixTime(struct tm* pDt)
 
 	gettimeofday(&tv, &tz); // call gettimeofday()
 	time1=tv.tv_sec;
-	pDt = localtime(&time1);
+	pDt = *localtime(&time1);
 	return 1;
 }
 
-int CTimer::GetSystemTime(struct tm* pDt)
+int CTimer::GetSystemTime(struct tm& pDt)
 {
 	time_t rawtime;
 	time ( &rawtime );
-	pDt = localtime ( &rawtime );
+	pDt = *localtime ( &rawtime );
 	return 1;
 }
 

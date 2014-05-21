@@ -55,8 +55,8 @@ public:
     CTimer();
     ~CTimer();
 	
-	int		GetSystemUnixTime(struct tm* pDt);
-	int		GetSystemTime(struct tm* pDt);
+	int		GetSystemUnixTime(struct tm& pDt);
+	int		GetSystemTime(struct tm& pDt);
 };
 
 #endif //__ZENO_CTIMER_H__

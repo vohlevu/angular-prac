@@ -90,12 +90,22 @@ int CDtvCtrl::DeInit()
 }
 
 char* CDtvCtrl::GetTime() {
-	/*char time[20];
+	/*char time[DATETIME_SLEN];
 	strcpy(time, "23/34/6/11/2007");*/
-	char buffer [80];
+	char buffer [DATETIME_SLEN];
 	struct tm timeinfo;
-	m_pCTimer->GetSystemTime(&timeinfo);
-	strftime (buffer,80,"Now it's %y/%m/%d.",&timeinfo);
+	m_pCTimer->GetSystemTime(timeinfo);
+	//printf("%04d.%02d.%02d %02d:%02d:%02d\n",1900+timeinfo.tm_year,1+timeinfo.tm_mon,timeinfo.tm_mday,timeinfo.tm_hour,timeinfo.tm_min,timeinfo.tm_sec);
+	strftime (buffer,DATETIME_SLEN,"%H/%M/%d/%m/%Y",&timeinfo);
+	printf("\n================CDtvCtrl::getTime=========================== %s\n\n", buffer);
+	return buffer;
+}
+
+char* CDtvCtrl::GetUnixTime() {
+	char buffer [DATETIME_SLEN];
+	struct tm timeinfo;
+	m_pCTimer->GetSystemUnixTime(timeinfo);
+	strftime (buffer,DATETIME_SLEN,"%H/%M/%d/%m/%Y",&timeinfo);
 	printf("\n================CDtvCtrl::getTime=========================== %s\n\n", buffer);
 	return buffer;
 }
