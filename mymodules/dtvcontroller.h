@@ -48,7 +48,7 @@ private:
 	RMuint8 		 m_uiTunerNum;
 	RMuint8 		 m_uiCurTunerID;
 	RMuint8 		 m_aDtvStatus[MAX_TUNER_NUM];
-
+	void 			(*MySocketCallbackFunc)(char*);
 protected:
 	
 	CTimer		*m_pCTimer;
@@ -74,6 +74,8 @@ public :
 	RMstatus		SwitchToDtvPort(RMuint8 uiTunerID);
 	char*			GetChannelNameById(RMuint8 iDChannel);
 	RMuint16		GetTotalChannel();
+	
+	void			SetSocketCallbackFunc(void (*func_pointer)(char*));
 
 };
 

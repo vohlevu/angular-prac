@@ -9,9 +9,11 @@ using namespace v8;
 CDatabase	*m_cDatabase = NULL;
 CDtvCtrl	*m_cDtvCtrl = NULL;
 CSysInfo	*m_CSysInfo = NULL;
+Persistent<Function> callback;
 void initDTV();
 void ReadInfoDtvToNand();
 void initDatabase();
+void socketCallbackFunc(char* data);
 void test(void* s);
 // Returns the Nth number in the fibonacci sequence where N is the first
 // argument passed.
@@ -85,7 +87,7 @@ Handle<Value> getTotalChannel(const Arguments& args) {
 	HandleScope scope;
 	printf("\n================Handle<Value> getTotalChannel===========================\n");
 	int32_t result = m_cDtvCtrl->GetTotalChannel();
-	
+
 	return scope.Close(Integer::New(result));
 }
 
@@ -107,6 +109,36 @@ Handle<Value> getEpgInfoString(const Arguments& args) {
 	return scope.Close(String::New(ret));
 }
 
+Handle<Value> registerSocketCallbackFunc(const Arguments& args) {
+	HandleScope scope;
+	// Ensure that we got a callback. Generally, your functions should have
+	// optional callbacks. In this case, you can declare an empty
+	// Local<Function> handle and check for content before calling.
+	if (!args[0]->IsFunction()) {
+		return ThrowException(Exception::TypeError(
+			String::New("First argument must be a callback function")));
+	}
+    // There's no ToFunction(), use a Cast instead.
+	Local<Function> callbackLocal = Local<Function>::Cast(args[0]);
+    callback = Persistent<Function>::New(callbackLocal);
+
+    return Undefined();
+}
+// >>>>>>>>>>>>>>>>>>>>>>> Callback <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+void socketCallbackFunc(char* data) {
+	// In case the operation succeeded, convention is to pass null as the
+	// first argument before the result arguments.
+	const unsigned argc = 1;
+	Local<Value> argv[argc] = {
+		Local<Value>::New(String::New(data))
+	};
+
+	// Note: When calling this in an asynchronous function that just returned
+	// from the threadpool, you have to wrap this in a v8::TryCatch.
+	// You can also pass another handle as the "this" parameter.
+	callback->Call(Context::GetCurrent()->Global(), argc, argv);
+}
+// >>>>>>>>>>>>>>>>>>>>>>> RegisterModule <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 void RegisterModule(Handle<Object> target) {
 	initDTV();
 	//initDatabase();
@@ -115,6 +147,7 @@ void RegisterModule(Handle<Object> target) {
     target->Set(String::NewSymbol("getEpgInfoString"), FunctionTemplate::New(getEpgInfoString)->GetFunction());
     target->Set(String::NewSymbol("getChannelNameById"), FunctionTemplate::New(getChannelNameById)->GetFunction());
     target->Set(String::NewSymbol("getTotalChannel"), FunctionTemplate::New(getTotalChannel)->GetFunction());
+    target->Set(String::NewSymbol("registerSocketCallbackFunc"), FunctionTemplate::New(registerSocketCallbackFunc)->GetFunction());
 }
 
 NODE_MODULE(controller, RegisterModule);
@@ -126,6 +159,7 @@ void initDTV() {
 		m_cDtvCtrl = new CDtvCtrl();
 	}
 	m_cDtvCtrl->Init();
+	m_cDtvCtrl->SetSocketCallbackFunc(&socketCallbackFunc);
 	memset(&dtv_sysInfoParams, 0, sizeof(SDtvParams));
 	m_cDtvCtrl->SetDtvSysInfoParams(&dtv_sysInfoParams);
 	if (!m_CSysInfo) {

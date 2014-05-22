@@ -70,13 +70,29 @@ var httpServer = http.createServer( function(req, res) {
 
 var run = function(socket){
     // Socket process here!!!
+	socket.on('create', function(room) {
+		console.log('Socket join room : %s', room);
+		socket.join(room);
+	});
     socket.emit('greeting', 'Hello from Socket.IO server');
+	setTimeout(function(){	// Delay for join room
+		controller.getTotalChannel();		// Testing callback and socket emit
+	},5000);
 }
 
 var io = socketIO.listen(httpServer);
 io.set('match origin protocol', true);
 io.set('origins', '*:*');
 io.sockets.on('connection', run);
+
+var socketCallbackFunc = function (data) {
+	console.log('socketCallbackFunc : %s', data);
+	if ("" != data) {
+		io.sockets.in('tcpremote').emit('event', data);
+	}
+}
+
+controller.registerSocketCallbackFunc(socketCallbackFunc);
 
 function getFile(localPath, res, mimeType) {
 	fs.readFile(localPath, function(err, contents) {

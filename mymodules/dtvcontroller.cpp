@@ -93,6 +93,10 @@ int CDtvCtrl::DeInit()
 	return err;
 }
 
+void CDtvCtrl::SetSocketCallbackFunc(void (*func_pointer)(char*))
+{
+	MySocketCallbackFunc = func_pointer;
+}
 /******************************************************************************
 * FUNCTION: 
 *  		void SetDtvSysInfoParams(SDtvParams*	dtvParams)
@@ -362,6 +366,7 @@ char* CDtvCtrl::GetChannelNameById(RMuint8 iDChannel)
 ******************************************************************************/
 RMuint16 CDtvCtrl::GetTotalChannel()
 {
+	MySocketCallbackFunc("This is socket callback from CDtvCtrl ...");
     SDChanInfo*	s_pSysInfoChan = &s_pSysInfoDtvParams->sChanInfo[m_uiCurTunerID];
     return s_pSysInfoChan->numDChannel;
 }
