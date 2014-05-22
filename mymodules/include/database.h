@@ -18,6 +18,7 @@ private:
 	sqlite3 		*pdb;			//pointer database
 	sqlite3_stmt 	*selectStmt;  	//contain output of select query
 public:
+	CDatabase();
 	CDatabase(void (*func_pointer)(void*));
 	~CDatabase();
 	RMstatus		OpenDatabase(char* _dataPath, int flag);

@@ -65,6 +65,24 @@ Handle<Value> getTime(const Arguments& args) {
 	return scope.Close(String::New(time));
 }
 
+Handle<Value> getEpgInfoString(const Arguments& args) {
+	HandleScope scope;
+	if (args.Length() < 1) {
+		ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
+		return scope.Close(Undefined());
+	}
+	char *c_arg;
+	String::Utf8Value str(args[0]->ToString());
+	c_arg = *str;
+	printf("\n================Handle<Value> getEpgInfoString===========================%s\n", c_arg);
+	string data = m_cDtvCtrl->CreateEPGInfoString(c_arg);
+	//const char *ret = data.c_str();
+	char *ret = new char[data.length() + 1];
+	strcpy(ret, data.c_str());
+	//delete [] ret;
+	return scope.Close(String::New(ret));
+}
+
 void RegisterModule(Handle<Object> target) {
 	init();
 	//initDatabase();
@@ -72,6 +90,8 @@ void RegisterModule(Handle<Object> target) {
         FunctionTemplate::New(Fibonacci)->GetFunction());
     target->Set(String::NewSymbol("getTime"),
         FunctionTemplate::New(getTime)->GetFunction());
+    target->Set(String::NewSymbol("getEpgInfoString"),
+        FunctionTemplate::New(getEpgInfoString)->GetFunction());
 }
 
 NODE_MODULE(controller, RegisterModule);

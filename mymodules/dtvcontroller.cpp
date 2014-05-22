@@ -10,16 +10,8 @@
 ******************************************************************************/
 #include <string.h>
 #include <stdio.h>
+#include <iostream>
 #include "dtvcontroller.h"
-// This is the JSON header
-#include "json/json.h"
-#include "curl/curl.h"
-
-struct FtpFile {
-	const char *filename;
-	FILE *stream;
-};
-size_t my_fwrite(void *buffer, size_t size, size_t nmemb, void *stream);
 /******************************************************************************
 * FUNCTION:
 *		CDtvCtrl::CDtvCtrl()
@@ -35,6 +27,16 @@ CDtvCtrl::CDtvCtrl()
 	if (!m_pCTimer) {
 		m_pCTimer = new CTimer();
 	}
+	char sqlQuery[300];
+	if (!m_pEpgDatabase) {
+		m_pEpgDatabase 	= new CDatabase();
+	}
+	if (m_pEpgDatabase) {
+		m_pEpgDatabase->OpenDatabase((char*)"../userdata/epg.db", 0);
+		strcpy(sqlQuery, (char*)"CREATE TABLE IF NOT EXISTS  EventEPGDetail (ChannelID, EventID, StartTime, EndTime, Title, Description, Language)");
+		m_pEpgDatabase->CreateNewTable(sqlQuery);
+	}
+	GetTimeZone("GMT+7", &tz);
 }
 
 /******************************************************************************
@@ -108,6 +110,92 @@ char* CDtvCtrl::GetUnixTime() {
 	strftime (buffer,DATETIME_SLEN,"%H/%M/%d/%m/%Y",&timeinfo);
 	printf("\n================CDtvCtrl::getTime=========================== %s\n\n", buffer);
 	return buffer;
+}
+
+string CDtvCtrl::CreateEPGInfoString(char* channelId)
+{
+	string strEPGInfo = "";
+	char s[100] = "";
+	char utf8[300];
+	char **table;
+	char *err_msg;
+	int i, rows = 0, columns = 0;
+	RMstatus status;
+	DayTime_dtv stStartTime, stEndTime, stTempTime;
+	char acTime[TIME_SLEN], acDesGeneral[DES_GENERAL_SLEN], textUtf8[EXT_TEXT_SLEN];
+	RMuint16 totalEvent = 0;
+	RMbool	statusPvr = false;
+	struct tm timeinfo;
+	m_pCTimer->GetSystemTime(timeinfo);		// Get current time
+	// Testing
+	timeinfo.tm_year = 107;		// 2007
+	timeinfo.tm_mon = 10;		// Nov
+	timeinfo.tm_mday = 6;		// 6
+	//PrintDayTime("PrintDayTime", stStartTime);
+	
+	ConvertTmToDaytimeDtv(timeinfo, &stStartTime);
+	stStartTime.hms.second = 59;
+	RMuint32 currentTime = GetNumSecondFromDefaultDate(stStartTime);
+	if (tz.status == ADD)
+	{
+		currentTime -= UTCTOGPS + tz.hour*60*60 + tz.minute*60;
+	}
+	else //tz.status == MINUS)
+	{
+		currentTime -= UTCTOGPS - tz.hour*60*60 - tz.minute*60;
+	}
+	sprintf(utf8,
+			"select EventID, StartTime, EndTime, Title, Description from EventEPGDetail where ChannelID = '%s' AND StartTime + EndTime > %ld order by StartTime",
+			channelId,
+			currentTime);
+	status = m_pEpgDatabase->ExecuteQuery((char*)utf8, &table, &rows, &columns, &err_msg);
+	// check status
+
+	strcpy(s, "Tue Nov 6, 2007  11:39 PM|||2|||11/07/2007|||0|||0|||1|||0|||");
+	strEPGInfo += s;
+	
+	for (i = 1; i <= rows; i++) {
+		stEventEPG[i-1].eventID = atoi(table[i*columns]);
+		stEventEPG[i-1].startTime = _atoi64(table[i*columns + 1]);
+		stEventEPG[i-1].duration = _atoi64(table[i*columns + 2]);
+		strcpy(stEventEPG[i-1].title, table[i*columns + 3]);
+		strcpy(stEventEPG[i-1].description, table[i*columns + 4]);
+        GPSToUTCDayTime(stEventEPG[i-1].startTime, &stTempTime);
+		ChangeDayTimeZone(stTempTime, (TimeZone_dtv&)tz, 0, &stStartTime);
+
+		memset(&stTempTime, 0, sizeof(DayTime_dtv));
+		GPSToUTCDayTime(stEventEPG[i-1].startTime + stEventEPG[i-1].duration, &stTempTime);
+		ChangeDayTimeZone(stTempTime, (TimeZone_dtv&)tz, 0, &stEndTime);
+		GetEventTime(stStartTime, acTime);
+		GetEventTime_StartEnd(stStartTime, stEndTime, acDesGeneral);
+
+		//separate member on list
+		if(totalEvent > 0)
+			strEPGInfo += STRING_DOUBLE_HYPHEN;
+		totalEvent++;
+		statusPvr = 0;
+		sprintf(s, "%d |%s |%s |%d |%s |%s ",
+				//acTime,
+				statusPvr,
+				stEventEPG[i-1].title,
+				acDesGeneral,
+				stEventEPG[i-1].eventID,
+				true? "HD": "SD",
+				stEventEPG[i-1].description);
+
+		ConvertISO8859ToUTF8((unsigned char*)s, textUtf8);
+		strEPGInfo += textUtf8;
+	}
+	strEPGInfo += " ";
+	strEPGInfo += STRING_TRIO_HYPHEN;
+	ConvertUintToString(totalEvent, s);
+
+	strEPGInfo += s;
+	strEPGInfo += STRING_TRIO_HYPHEN;
+	free(stEventEPG);
+	sqlite3_free_table(table);
+    //cout << "strEPGInfo = " << strEPGInfo << "\n" ;
+	return strEPGInfo;
 }
 
 int CDtvCtrl::TestJson()

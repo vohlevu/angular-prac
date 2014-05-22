@@ -34,6 +34,12 @@ CDatabase::CDatabase(void (*func_pointer)(void*))
 #endif
 }
 
+CDatabase::CDatabase()
+{
+	pdb 		= NULL;
+	selectStmt 	= NULL;
+	dataPath	= NULL;
+}
 /******************************************************************************
 * FUNCTION: 
 *  CDatabase::~CDatabase()

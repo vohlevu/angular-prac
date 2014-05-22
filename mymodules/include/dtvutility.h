@@ -13,6 +13,27 @@
 #include "rmdef/rmdef.h"
 #include "dtv/defs_dtv_sysinfo.h"
 
+#ifndef STRING_HYPHEN
+#define STRING_HYPHEN					"|"
+#endif
+
+#ifndef STRING_DOUBLE_HYPHEN
+#define STRING_DOUBLE_HYPHEN			"||"
+#endif
+
+#ifndef STRING_TRIO_HYPHEN
+#define STRING_TRIO_HYPHEN				"|||"
+#endif
+
+#define UTCTOGPS	315964811
+#define TOTAL_MONTH_AYEAR	12
+static char aacMonths[TOTAL_MONTH_AYEAR][4]={"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", 
+								"Aug", "Sep", "Oct", "Nov", "Dec"};
+
+RMstatus 	GetTimeZone(char* tz,struct TimeZone_dtv* pTimezone);
+void		ConvertTmToDaytimeDtv(struct tm pTM, struct DayTime_dtv* pDt);
+void		GetEventTime(DayTime_dtv stTime, char* pcTime);
+void 		GetEventTime_StartEnd(DayTime_dtv stStartTime, DayTime_dtv stEndTime, char* pcStartEndTime);
 void		ConvertUintToString(RMuint16 uiSrc, char *pStrDes);
 RMuint32 	GetNumSecondFromDefaultDate(struct DayTime_dtv stDt);
 RMint32 	GetDateFromSecond(RMuint32 uiSecond, RMint16 iTimeZone, struct DayTime_dtv* pDt);

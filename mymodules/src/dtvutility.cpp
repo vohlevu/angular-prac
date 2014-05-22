@@ -10,10 +10,9 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
-
 #include "../include/dtvutility.h"
-#define UTCTOGPS	315964811
 
 void GPSToUTC(RMuint32 uiPGSSec, RMuint32* puiUTC) {
 	*puiUTC = uiPGSSec + UTCTOGPS;
@@ -61,6 +60,91 @@ void PrintTimeZone(char* sComment, TimeZone_dtv sTZ) {
 
 }
 
+void ConvertTmToDaytimeDtv(struct tm pTM, struct DayTime_dtv* pDt) {
+	//year
+	pDt->ymdw.year		= pTM.tm_year + 1900;		//[1900, ...]
+	
+	//month
+	pDt->ymdw.month		= pTM.tm_mon + 1;		//[0, 11]
+	//day
+	pDt->ymdw.day		= pTM.tm_mday;		//[1, 31]
+	
+	//hour
+	pDt->hms.hour		= pTM.tm_hour;		//[0, 23]
+	//minute
+	pDt->hms.minute		= pTM.tm_min;		//[0, 59]
+	//second
+	pDt->hms.second		= pTM.tm_sec;		//[0, 59]
+	//week day
+	pDt->ymdw.week_day	= pTM.tm_wday;
+	if (pDt->ymdw.week_day == 0) {
+		pDt->ymdw.week_day = 7;
+	}
+}
+
+RMstatus GetTimeZone(char* tz,struct TimeZone_dtv* pTimezone)
+{
+	int hour = 0;
+	int minute = 0;
+	char tzone[14];
+	if (tz != NULL) {
+		char *pch = strstr (tz, "GMT");
+		if (pch != NULL) {
+			hour = strtol (pch+3, NULL, 10);
+			hour = 0 - hour;
+		}
+	}
+	pTimezone->hour = abs(hour);
+	
+	sprintf(tzone,"%x",minute);
+	pTimezone->minute = atoi(tzone);
+	
+	if (hour > 0) {
+		sprintf(pTimezone->acSTimeZoneName, "GMT:+%2.2x:%2.2x", hour, minute);
+		pTimezone->status = ADD;
+	}
+	else
+	{
+		sprintf(pTimezone->acSTimeZoneName, "GMT:-%2.2x:%2.2x", hour, minute);
+		pTimezone->status = MINUS;
+	}
+
+	return RM_OK;
+}
+
+void GetEventTime(DayTime_dtv stTime, char* pcTime)
+{
+	if (pcTime != NULL)
+	{
+		sprintf(pcTime, "%s %d %s%d:%s%d %s",
+			aacMonths[stTime.ymdw.month - 1],
+			stTime.ymdw.day,
+			(stTime.hms.hour == 0 || stTime.hms.hour == 12 || (stTime.hms.hour % 12) == 11 || (stTime.hms.hour % 12) == 10)?"" : "0",
+			((stTime.hms.hour%12) == 0)?12:stTime.hms.hour%12,
+			(stTime.hms.minute >= 10)?"" : "0",
+			stTime.hms.minute,
+			((stTime.hms.hour>=12 && stTime.hms.hour<24)?"PM":"AM") );
+
+		
+	}
+}
+
+void GetEventTime_StartEnd(DayTime_dtv stStartTime, DayTime_dtv stEndTime, char* pcStartEndTime)
+{
+	sprintf(pcStartEndTime, "%s%d:%s%d %s - %s%d:%s%d %s",
+	// StartTime
+	(stStartTime.hms.hour == 0 || stStartTime.hms.hour == 12 || (stStartTime.hms.hour%12) == 11 ||(stStartTime.hms.hour%12) == 10)?"" : "0",
+	((stStartTime.hms.hour%12) == 0)?12:stStartTime.hms.hour%12,
+	(stStartTime.hms.minute >= 10)?"" : "0",
+	stStartTime.hms.minute,
+	(stStartTime.hms.hour>=12 && stStartTime.hms.hour < 24)?"PM":"AM",
+	// EndTime
+	(stEndTime.hms.hour == 0 || stEndTime.hms.hour == 12 || (stEndTime.hms.hour%12) == 11 ||(stEndTime.hms.hour%12) == 10)?"" : "0",
+	((stEndTime.hms.hour%12) == 0)?12:stEndTime.hms.hour%12,
+	(stEndTime.hms.minute >= 10)?"" : "0",
+	stEndTime.hms.minute,
+	(stEndTime.hms.hour>=12 && stEndTime.hms.hour<24)?"PM":"AM");
+}
 /**
  * <b>FUNCTION: </b>
  *
