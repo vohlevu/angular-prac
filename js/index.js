@@ -77,4 +77,8 @@ function Main (){
 var main = new Main();
 $(document).ready(function() {
 	main.start();
+	var socket = io.connect('http://localhost:8000');
+    socket.on('greeting', function(data){
+		alert(data);
+    });
 });

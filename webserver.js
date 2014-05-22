@@ -9,10 +9,11 @@ var path = require("path");
 var fs = require("fs");
 var querystring = require('querystring');
 var controller = require('./mymodules/bin/controller');
+var socketIO = require('socket.io');
 
 console.log("Starting web server at " + serverUrl + ":" + port);
 
-http.createServer( function(req, res) {
+var httpServer = http.createServer( function(req, res) {
 	
 	//console.log("Request method : " + req.method);
 	if(req.method == "POST") {
@@ -63,7 +64,19 @@ http.createServer( function(req, res) {
 			console.log("Invalid file extension detected: " + ext)
 		}
 	}
-}).listen(port, serverUrl);
+}).listen(port, serverUrl, function(){
+								console.log('Socket.IO server started at %s:%s', serverUrl, port);
+							});
+
+var run = function(socket){
+    // Socket process here!!!
+    socket.emit('greeting', 'Hello from Socket.IO server');
+}
+
+var io = socketIO.listen(httpServer);
+io.set('match origin protocol', true);
+io.set('origins', '*:*');
+io.sockets.on('connection', run);
 
 function getFile(localPath, res, mimeType) {
 	fs.readFile(localPath, function(err, contents) {
