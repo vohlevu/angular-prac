@@ -1,4 +1,7 @@
 var controller = require('./bin/controller');
 
 //console.warn(controller.fibonacci(9));
-console.warn("run.js >>>> " + controller.getEpgInfoString("9.2"));
+var totalChannel = controller.getTotalChannel();
+for (var i = 0; i < totalChannel; i++) {
+	console.warn("run.js >>>> " + controller.getChannelNameById(i));
+}

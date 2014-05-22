@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
+#include "dtvcontroller_define.h"
 #include "dtvcontroller.h"
 /******************************************************************************
 * FUNCTION:
@@ -37,6 +38,7 @@ CDtvCtrl::CDtvCtrl()
 		m_pEpgDatabase->CreateNewTable(sqlQuery);
 	}
 	GetTimeZone("GMT+7", &tz);
+	m_uiTunerNum = MAX_TUNER_NUM;
 }
 
 /******************************************************************************
@@ -91,6 +93,233 @@ int CDtvCtrl::DeInit()
 	return err;
 }
 
+/******************************************************************************
+* FUNCTION: 
+*  		void SetDtvSysInfoParams(SDtvParams*	dtvParams)
+* DESCRIPTION:
+*		Transmit dtv data from system info to DtvCtrl class 	
+* @PARAM: 
+* 		SDtvParams*	dtvParams : a pointer to dtv data in system info
+* @RETURN: 
+* NOTE: 
+******************************************************************************/
+void CDtvCtrl::SetDtvSysInfoParams(SDtvParams*	dtvParams)
+{
+	s_pSysInfoDtvParams = dtvParams;
+}
+
+/******************************************************************************
+* FUNCTION: 
+*  		RMstatus ResetDtvSystemInfo(RMuint8 uiTunerID)
+* DESCRIPTION:
+*		Reset Dtv System Info
+* @PARAM: 
+*		RMuint8 uiTunerID: Identify tuner that need use
+* @RETURN: 
+*		RMstatus    :  RM_OK : if success
+*                      RM_ERROR: fail	 
+* NOTE: 
+******************************************************************************/
+RMstatus CDtvCtrl::ResetDtvSystemInfo(RMuint8 uiTunerID)
+{
+	SDChanInfo*	s_pSysInfoChan = &s_pSysInfoDtvParams->sChanInfo[uiTunerID];
+	memset(s_pSysInfoChan->aVideoChansIndex,0,sizeof(s_pSysInfoChan->aVideoChansIndex));
+	memset(s_pSysInfoChan->aRadioChansIndex,0,sizeof(s_pSysInfoChan->aRadioChansIndex));
+	memset(s_pSysInfoChan->astDChannel,0,sizeof(s_pSysInfoChan->astDChannel));
+	//memset (s_pSysInfoDtvParams,0,sizeof(SDtvParams));
+	 
+	s_pSysInfoChan->numDChannel 		= 0;
+	s_pSysInfoChan->currentDChannel 	= 0;
+	s_pSysInfoChan->videoChanNum		= 0;
+	s_pSysInfoChan->scan_type			= 0;
+	s_pSysInfoChan->lastChanIdx			= 0;
+	s_pSysInfoChan->firstChanIdx		= 0;
+	s_pSysInfoChan->statusSubLang		= -1;
+	s_pSysInfoChan->parentalCtrlOnOff 	= PARENTAL_CONTROL_OFF; 
+	s_pSysInfoChan->parentalCtrlAge		= RATING_18;
+	
+	s_pSysInfoChan->sAutoScanParams.uiBandwidth  	= DEFAULT_BANDWIDTH;
+	s_pSysInfoChan->sAutoScanParams.uiStartFreq     = DEFAULT_START_FREQ;
+	s_pSysInfoChan->sAutoScanParams.uiEndFreq    	= DEFAULT_END_FREQ;
+	s_pSysInfoChan->sAutoScanParams.uiNitFreq    	= DEFAULT_NIT_FREQ;
+	s_pSysInfoChan->sAutoScanParams.uiModulation    = DEFAULT_MODULATION;
+	s_pSysInfoChan->sAutoScanParams.uiSymbolRate 	= DEFAULT_SYMBOLRATE;
+
+	s_pSysInfoChan->scan_type			= DEFAULT_SCAN_TYPE;
+	s_pSysInfoChan->dvbcFreq			= DEFAULT_NIT_FREQ;//DEFAULT_START_FREQ;
+	s_pSysInfoChan->dvbcQAM				= DEFAULT_MODULATION;
+	s_pSysInfoChan->dvbcSymbolRate		        = DEFAULT_SYMBOLRATE;
+	s_pSysInfoChan->resetChannel		        = DEFAULT_RESET_CHANNEL;
+
+	return RM_OK;
+}
+
+/******************************************************************************
+* FUNCTION: 
+*  		RMstatus SetDtvStatus(RMuint8 uiDtvStatus)
+*
+* DESCRIPTION:
+*		 Set General Dtv Status
+* @PARAM: 
+*		RMuint8 uiDtvStatus
+*
+* @RETURN: 
+*		
+* NOTE: 
+******************************************************************************/
+RMstatus CDtvCtrl::SetDtvStatus(RMuint8 uiTunerID, RMuint8 uiDtvStatus)
+{
+    if (uiTunerID >= m_uiTunerNum)
+		return RM_ERROR;
+
+	m_aDtvStatus[uiTunerID] = uiDtvStatus;
+	return RM_OK;
+}
+/******************************************************************************
+* FUNCTION: 
+*  		RMstatus SwitchToDtvPort(RMuint8 uiTunerID)
+* DESCRIPTION:
+*		Switch tunerID
+* @PARAM: 
+*		RMuint8 uiTunerID: tunerID needs switch
+* @RETURN: 
+*		
+* NOTE: 
+******************************************************************************/
+RMstatus CDtvCtrl::SwitchToDtvPort(RMuint8 uiTunerID)
+{
+	if (uiTunerID >= m_uiTunerNum)
+		return RM_ERROR;
+	m_uiCurTunerID = uiTunerID;
+	return RM_OK;
+}
+/******************************************************************************
+* FUNCTION: 
+*  		RMstatus RestoreChannelInfo(RMuint8 uiTunerID)
+* DESCRIPTION:
+*		Restore Channel Info
+* @PARAM: 
+*		RMuint8 uiTunerID: Identify tuner that need use
+* @RETURN: 
+*		RMstatus    :  RM_OK : if success
+*                      RM_ERROR: fail	
+* NOTE: 
+******************************************************************************/
+RMstatus CDtvCtrl::RestoreChannelInfo(RMuint8 uiTunerID, RMbool isInit)
+{
+	RMstatus err = RM_OK;
+	SChanSetInfo	 chanInfo;
+	RMuint16 		 oldChanelIdx = 1000; 
+	SChanParam	 	 sChanParam;
+	SProgParam   	 sProgParam;
+	SProgSetInfo 	 progInfo;
+
+	printf("\n>>>>>>>>>>>>>>>>>> RestoreChannelInfo!!! >>>>>>>>>>>>>>>>>>\n");
+
+	SDChanInfo*	s_pSysInfoChan = &s_pSysInfoDtvParams->sChanInfo[m_uiCurTunerID];
+	
+	SetDtvStatus(uiTunerID, DTV_STATUS_RESTORE_CHAN_INFO_DOING);
+	
+	if (isInit) {
+		for (RMuint16 i = 0; i < s_pSysInfoChan->numDChannel ;i++)
+		{
+			if (s_pSysInfoChan->astDChannel[i].chanIdx != oldChanelIdx)
+			{
+				sChanParam.chanIdx  = s_pSysInfoChan->astDChannel[i].chanIdx;
+				chanInfo.numProgram = s_pSysInfoChan->astDChannel[i].numProgram;
+				chanInfo.transport_stream_id	= s_pSysInfoChan->astDChannel[i].transport_stream_id;
+				/*if (m_pDtvPlayer->SetChanInfo(m_aDtvIndex[uiTunerID], &sChanParam, &chanInfo) != RM_OK) {
+						printf("CDtvApp::RestoreChannelInfo: Can not SetChanInfo \n");
+						return RM_ERROR;
+				}*/
+				oldChanelIdx = s_pSysInfoChan->astDChannel[i].chanIdx;
+			}
+		}
+	}
+	//Nit
+	memcpy(&progInfo.sNit, &s_pSysInfoChan->sNit, sizeof(SNITInfo));
+	memcpy(&progInfo.sSdt, &s_pSysInfoChan->sSdt, sizeof(SSDTInfo));
+
+	for (RMuint16 i = 0; i < s_pSysInfoChan->numDChannel ;i++)
+	{
+		progInfo.uiFreq			= s_pSysInfoChan->astDChannel[i].uiFreq;
+		progInfo.standard		= s_pSysInfoChan->astDChannel[i].standard;
+		progInfo.symbolrate		= s_pSysInfoChan->astDChannel[i].symbolrate;
+		progInfo.QAM			= s_pSysInfoChan->astDChannel[i].DVBCQAM;
+		progInfo.logChanNum		= s_pSysInfoChan->astDChannel[i].logChanNum;//lcn
+
+		//Logical Channel Number
+		progInfo.fav		= s_pSysInfoChan->astDChannel[i].uiFavor;
+		progInfo.lock		= s_pSysInfoChan->astDChannel[i].uiLock;
+		progInfo.skip		= s_pSysInfoChan->astDChannel[i].uiSkip;
+
+		//teletext
+		progInfo.numTeletextEs	= s_pSysInfoChan->astDChannel[i].numTeletextEs;
+		memcpy(progInfo.rgTeletextEs, s_pSysInfoChan->astDChannel[i].rgTeletextEs, sizeof(progInfo.rgTeletextEs));
+		
+		//subtitle
+		progInfo.numSubtitleEs	= s_pSysInfoChan->astDChannel[i].numSubtitleEs;
+		memcpy(progInfo.rgSubtitleEs, s_pSysInfoChan->astDChannel[i].rgSubtitleEs, sizeof(progInfo.rgSubtitleEs));
+		
+		//subtitle language
+		progInfo.numSubLang	= s_pSysInfoChan->astDChannel[i].numSubLang;
+		memcpy(progInfo.sttLang, s_pSysInfoChan->astDChannel[i].sttLang, sizeof(progInfo.sttLang));
+
+		//video
+		progInfo.numVidEs		= s_pSysInfoChan->astDChannel[i].numVidEs;
+		memcpy(progInfo.rgVidEs, s_pSysInfoChan->astDChannel[i].rgVidEs, sizeof(progInfo.rgVidEs));
+		
+		//audio
+		progInfo.numAudEs		= s_pSysInfoChan->astDChannel[i].numAudEs;
+		memcpy(progInfo.rgAudEs, s_pSysInfoChan->astDChannel[i].rgAudEs, sizeof(progInfo.rgAudEs));
+		
+		//pcr
+		progInfo.pcr_pid		= s_pSysInfoChan->astDChannel[i].pcr_pid;
+		
+		//Name
+		memset(progInfo.short_name, 0, sizeof(progInfo.short_name));
+		for (RMuint16 j = 0; j < DIGITAL_CHANNEL_NAME_LENGTH; j ++) {
+			progInfo.short_name[j] = s_pSysInfoChan->astDChannel[i].acName[j];
+		}
+		progInfo.short_name[DIGITAL_CHANNEL_NAME_LENGTH] = 0;	
+
+		//parental 
+		memcpy(&progInfo.rgParentalRating, &s_pSysInfoChan->astDChannel[i].rgParentalRating, sizeof(progInfo.rgParentalRating));
+
+		progInfo.major_channel_number	= s_pSysInfoChan->astDChannel[i].uiMajor;
+		progInfo.minor_channel_number	= s_pSysInfoChan->astDChannel[i].uiMinor;
+		progInfo.program_number			= s_pSysInfoChan->astDChannel[i].program_number;
+		progInfo.free_CA_mode			= s_pSysInfoChan->astDChannel[i].free_CA_mode; 
+		progInfo.program_map_PID		= s_pSysInfoChan->astDChannel[i].program_map_PID; 
+		progInfo.pmt_index				= s_pSysInfoChan->astDChannel[i].pmt_index;
+		progInfo.firstChanIdx 			= s_pSysInfoChan->firstChanIdx; 
+		progInfo.lastChanIdx  			= s_pSysInfoChan->lastChanIdx; 
+		progInfo.source_id				= s_pSysInfoChan->astDChannel[i].source_id; 
+
+		sProgParam.chanIdx				= s_pSysInfoChan->astDChannel[i].chanIdx;
+		sProgParam.progIdx				= s_pSysInfoChan->astDChannel[i].progIdx;
+
+
+		/*if (m_pDtvPlayer->SetProgInfo(m_aDtvIndex[uiTunerID], &sProgParam, &progInfo) != RM_OK)
+		{
+			DERROR("RestoreChannelInfo: Can not SetProgInfo \n");
+			err = RM_ERROR;
+		}*/
+	}
+
+	if(s_pSysInfoChan->numDChannel > 0) {
+#ifdef AUTO_UPDATE_CHANNEL
+
+#else
+		printf("s_pSysInfoChan->currentDChannel = %d\n", s_pSysInfoChan->currentDChannel);
+		//m_pDtvPlayer->Play(m_aDtvIndex[uiTunerID]);
+		//SetDChannel(m_uiCurTunerID, s_pSysInfoChan->currentDChannel);
+		SetDtvStatus(uiTunerID, DTV_STATUS_RESTORE_CHAN_INFO_DONE);
+#endif
+	}
+	return err;
+}
+
 char* CDtvCtrl::GetTime() {
 	/*char time[DATETIME_SLEN];
 	strcpy(time, "23/34/6/11/2007");*/
@@ -101,6 +330,40 @@ char* CDtvCtrl::GetTime() {
 	strftime (buffer,DATETIME_SLEN,"%H/%M/%d/%m/%Y",&timeinfo);
 	printf("\n================CDtvCtrl::getTime=========================== %s\n\n", buffer);
 	return buffer;
+}
+
+/******************************************************************************
+* FUNCTION: 
+*  		char* GetChannelNameById(RMuint8 iDChannel)
+* DESCRIPTION:
+*		Get name of channel by id
+* @PARAM: 
+*		
+* @RETURN: 
+*		Name of all channel
+* NOTE: 
+******************************************************************************/
+char* CDtvCtrl::GetChannelNameById(RMuint8 iDChannel)
+{
+    SDChanInfo*	s_pSysInfoChan = &s_pSysInfoDtvParams->sChanInfo[m_uiCurTunerID];
+    return (char*)s_pSysInfoChan->astDChannel[iDChannel].acName;
+}
+
+/******************************************************************************
+* FUNCTION: 
+*  		RMuint16 GetTotalChannel()
+* DESCRIPTION:
+*		Get total number of channel
+* @PARAM: 
+*		
+* @RETURN: 
+*		Total number of channel
+* NOTE: 
+******************************************************************************/
+RMuint16 CDtvCtrl::GetTotalChannel()
+{
+    SDChanInfo*	s_pSysInfoChan = &s_pSysInfoDtvParams->sChanInfo[m_uiCurTunerID];
+    return s_pSysInfoChan->numDChannel;
 }
 
 char* CDtvCtrl::GetUnixTime() {

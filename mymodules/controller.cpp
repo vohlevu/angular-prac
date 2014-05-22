@@ -1,12 +1,16 @@
 #include <node.h>
+#include "dtv/defs_dtv_sysinfo.h"
 #include "dtvcontroller.h"
-#include "include/database.h"
+#include "database.h"
+#include "sysinfo.h"
 
 using namespace v8;
 
 CDatabase	*m_cDatabase = NULL;
 CDtvCtrl	*m_cDtvCtrl = NULL;
-void init();
+CSysInfo	*m_CSysInfo = NULL;
+void initDTV();
+void ReadInfoDtvToNand();
 void initDatabase();
 void test(void* s);
 // Returns the Nth number in the fibonacci sequence where N is the first
@@ -57,12 +61,32 @@ Handle<Value> getTime(const Arguments& args) {
 	printf("\n================Handle<Value> getTime===========================\n");
 	char time[DATETIME_SLEN];
 	strcpy(time, m_cDtvCtrl->GetUnixTime());
-	/*if (!m_cDtvCtrl) {
-		time = m_cDtvCtrl->GetTime();
-	} else {
-		strcpy(time, "undefined");
-	}*/
+	
 	return scope.Close(String::New(time));
+}
+
+Handle<Value> getChannelNameById(const Arguments& args) {
+	HandleScope scope;
+	if (args.Length() < 1) {
+		ThrowException(Exception::TypeError(String::New("Wrong number of arguments")));
+		return scope.Close(Undefined());
+	}
+    Local<Integer> integer = args[0]->ToInteger();
+    int32_t seq = integer->Value();
+	printf("\n================Handle<Value> getChannelNameById===========================%d\n", seq);
+	
+	char result[SHORT_NAME_LENGTH];
+	strcpy(result, m_cDtvCtrl->GetChannelNameById(seq));
+
+	return scope.Close(String::New(result));
+}
+
+Handle<Value> getTotalChannel(const Arguments& args) {
+	HandleScope scope;
+	printf("\n================Handle<Value> getTotalChannel===========================\n");
+	int32_t result = m_cDtvCtrl->GetTotalChannel();
+	
+	return scope.Close(Integer::New(result));
 }
 
 Handle<Value> getEpgInfoString(const Arguments& args) {
@@ -84,28 +108,43 @@ Handle<Value> getEpgInfoString(const Arguments& args) {
 }
 
 void RegisterModule(Handle<Object> target) {
-	init();
+	initDTV();
 	//initDatabase();
-    target->Set(String::NewSymbol("fibonacci"),
-        FunctionTemplate::New(Fibonacci)->GetFunction());
-    target->Set(String::NewSymbol("getTime"),
-        FunctionTemplate::New(getTime)->GetFunction());
-    target->Set(String::NewSymbol("getEpgInfoString"),
-        FunctionTemplate::New(getEpgInfoString)->GetFunction());
+    target->Set(String::NewSymbol("fibonacci"), FunctionTemplate::New(Fibonacci)->GetFunction());
+    target->Set(String::NewSymbol("getTime"), FunctionTemplate::New(getTime)->GetFunction());
+    target->Set(String::NewSymbol("getEpgInfoString"), FunctionTemplate::New(getEpgInfoString)->GetFunction());
+    target->Set(String::NewSymbol("getChannelNameById"), FunctionTemplate::New(getChannelNameById)->GetFunction());
+    target->Set(String::NewSymbol("getTotalChannel"), FunctionTemplate::New(getTotalChannel)->GetFunction());
 }
 
 NODE_MODULE(controller, RegisterModule);
 
 // >>>>>>>>>>>>>>>>>>>>>>> CDtvCtrl <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-void init() {
+SDtvParams dtv_sysInfoParams;
+void initDTV() {
 	if (!m_cDtvCtrl) {
 		m_cDtvCtrl = new CDtvCtrl();
-		m_cDtvCtrl->Init();
-		//printf("\n TEST JSON >>> %s \n\n", m_cDtvCtrl->TestJson()==0?"SUCCESS":"FAIL");
-		//m_cDtvCtrl->TestCurl();
 	}
+	m_cDtvCtrl->Init();
+	memset(&dtv_sysInfoParams, 0, sizeof(SDtvParams));
+	m_cDtvCtrl->SetDtvSysInfoParams(&dtv_sysInfoParams);
+	if (!m_CSysInfo) {
+		m_CSysInfo = new CSysInfo();
+	}
+	ReadInfoDtvToNand();
 }
 
+void ReadInfoDtvToNand() {
+	RMuint8 tunerID = 0;
+	m_cDtvCtrl->SwitchToDtvPort(tunerID);
+	m_cDtvCtrl->ResetDtvSystemInfo(tunerID);
+	if(m_CSysInfo->Readdtv(&dtv_sysInfoParams)== RM_OK)
+	{
+		if(m_cDtvCtrl->RestoreChannelInfo(tunerID, TRUE)==RM_OK){
+			return;
+		}
+	}
+}
 // >>>>>>>>>>>>>>>>>>>>>>> CDatabase <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 void test(void* s) {
 	printf("\n\n========== %s =============\n\n",(char*) s);

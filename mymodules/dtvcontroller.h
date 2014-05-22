@@ -43,6 +43,11 @@ class CDtvCtrl
 private:
 	TimeZone_dtv tz;
 	EventEPGDetail stEventEPG[500];
+	SDtvParams*		s_pSysInfoDtvParams;
+	//general
+	RMuint8 		 m_uiTunerNum;
+	RMuint8 		 m_uiCurTunerID;
+	RMuint8 		 m_aDtvStatus[MAX_TUNER_NUM];
 
 protected:
 	
@@ -56,10 +61,19 @@ public :
 	int 			Init();
 	int 			DeInit();
 	int 			TestJson();
+	int 			TestCurl();
+	
 	char*			GetTime();
 	char*			GetUnixTime();
-	int 			TestCurl();
+	
 	string			CreateEPGInfoString(char* channelId);
+	void			SetDtvSysInfoParams(SDtvParams*	dtvParams);
+	RMstatus		ResetDtvSystemInfo(RMuint8 uiTunerID);
+	RMstatus		RestoreChannelInfo(RMuint8 uiTunerID, RMbool isInit);
+	RMstatus		SetDtvStatus(RMuint8 uiTunerID, RMuint8 uiDtvStatus);
+	RMstatus		SwitchToDtvPort(RMuint8 uiTunerID);
+	char*			GetChannelNameById(RMuint8 iDChannel);
+	RMuint16		GetTotalChannel();
 
 };
 

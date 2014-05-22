@@ -10,7 +10,6 @@
 #ifndef __DTV_UTILITY_H__
 #define __DTV_UTILITY_H__
 
-#include "rmdef/rmdef.h"
 #include "dtv/defs_dtv_sysinfo.h"
 
 #ifndef STRING_HYPHEN

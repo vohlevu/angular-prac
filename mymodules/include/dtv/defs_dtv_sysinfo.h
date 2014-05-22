@@ -11,6 +11,7 @@
 #ifndef __DTV_DEFS_SYSINFO__
 #define __DTV_DEFS_SYSINFO__
 
+#include "rmdef/rmdef.h"
 #include "defs_dtv.h"
 #include "defs_dtv_chaninfo.h"
 

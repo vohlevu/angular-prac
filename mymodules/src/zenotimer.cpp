@@ -8,7 +8,7 @@
 * Note			:			
 *
 ******************************************************************************/
-#include "../include/zenotimer.h"
+#include "zenotimer.h"
 
 /**
 * <b>FUNCTION: </b>

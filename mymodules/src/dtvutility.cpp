@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "../include/dtvutility.h"
+#include "dtvutility.h"
 
 void GPSToUTC(RMuint32 uiPGSSec, RMuint32* puiUTC) {
 	*puiUTC = uiPGSSec + UTCTOGPS;
