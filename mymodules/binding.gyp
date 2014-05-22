@@ -7,7 +7,9 @@
 					"./src/database.cpp",
 					"./src/zenotimer.cpp",
 					"./src/dtvutility.cpp",
-					"./src/sysinfo.cpp" ],
+					"./src/sysinfo.cpp",
+					"./src/network/NetworkServices.cpp",
+					"./src/network/ServerNetwork.cpp" ],
 		"include_dirs": [
 			"include"],
 		"libraries": [
