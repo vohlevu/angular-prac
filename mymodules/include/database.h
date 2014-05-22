@@ -5,11 +5,9 @@
 #include <stdlib.h>
 #include <iostream>
 #include "sqlite/sqlite3.h"
+#include "rmdef/rmdef.h"
 
 #define DATABASE_PATH 		"../userdata/data_sample_utf8.db"
-#define RMstatus 		bool
-#define RM_OK 			true
-#define RM_ERROR 		false
 
 using namespace std;
 

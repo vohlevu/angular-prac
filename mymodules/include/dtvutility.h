@@ -10,19 +10,7 @@
 #ifndef __DTV_UTILITY_H__
 #define __DTV_UTILITY_H__
 
-#define RMreal 			int
-#define RMascii 		char
-#define RMbool 			bool
-#define RMstatus 		bool
-#define RMuint64 		long
-#define RMuint32 		int
-#define RMint32 		int
-#define RMuint16 		int
-#define RMint16 		int
-#define RMuint8 		int
-#define RM_OK 			true
-#define RM_ERROR 		false
-
+#include "rmdef/rmdef.h"
 #include "dtv/defs_dtv_sysinfo.h"
 
 void		ConvertUintToString(RMuint16 uiSrc, char *pStrDes);
