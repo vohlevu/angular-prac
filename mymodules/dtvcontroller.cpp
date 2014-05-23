@@ -11,6 +11,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <iostream>
+// used for multi-threading
+#include <process.h>
 #include "dtvcontroller_define.h"
 #include "dtvcontroller.h"
 /******************************************************************************
@@ -39,6 +41,19 @@ CDtvCtrl::CDtvCtrl()
 	}
 	GetTimeZone("GMT+7", &tz);
 	m_uiTunerNum = MAX_TUNER_NUM;
+
+	// create thread with arbitrary argument for the run function
+    _beginthread( ServerLoop, 0, (void*)12);
+}
+
+// initialize the server
+ServerSocket* CDtvCtrl::server = new ServerSocket();
+void CDtvCtrl::ServerLoop(void * arg) 
+{ 
+    while(true) 
+    {
+        CDtvCtrl::server->update();
+    }
 }
 
 /******************************************************************************

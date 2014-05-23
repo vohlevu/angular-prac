@@ -2,3 +2,4 @@
 *.tlog
 build
 *.msi
+Debug

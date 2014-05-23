@@ -131,6 +131,21 @@ int ServerNetwork::receiveData(unsigned int client_id, char * recvbuf)
     return 0;
 }
 
+void ServerNetwork::sendToClientById(unsigned int client_id, char * packets, int totalSize)
+{
+    if( sessions.find(client_id) != sessions.end() )
+    {
+        SOCKET currentSocket = sessions[client_id];
+        int iSendResult = NetworkServices::sendMessage(currentSocket, packets, totalSize);
+
+        if (iSendResult == SOCKET_ERROR) 
+        {
+            printf("send failed with error: %d\n", WSAGetLastError());
+            closesocket(currentSocket);
+        }
+    }
+}
+
 // send data to all clients
 void ServerNetwork::sendToAll(char * packets, int totalSize)
 {

@@ -9,7 +9,8 @@
 					"./src/dtvutility.cpp",
 					"./src/sysinfo.cpp",
 					"./src/network/NetworkServices.cpp",
-					"./src/network/ServerNetwork.cpp" ],
+					"./src/network/ServerNetwork.cpp",
+					"./src/network/ServerSocket.cpp" ],
 		"include_dirs": [
 			"include"],
 		"libraries": [

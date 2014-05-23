@@ -11,6 +11,7 @@
 #include "zenotimer.h"
 #include "dtvutility.h"
 #include "database.h"
+#include "network/ServerSocket.h"
 
 using namespace std;
 #define DATETIME_SLEN		20
@@ -49,10 +50,13 @@ private:
 	RMuint8 		 m_uiCurTunerID;
 	RMuint8 		 m_aDtvStatus[MAX_TUNER_NUM];
 	void 			(*MySocketCallbackFunc)(char*);
-protected:
 	
+	static ServerSocket*	server;
+	
+protected:
 	CTimer		*m_pCTimer;
 	CDatabase	*m_pEpgDatabase;
+	
 public :
 	CDtvCtrl();
 	~CDtvCtrl();
@@ -63,6 +67,8 @@ public :
 	int 			TestJson();
 	int 			TestCurl();
 	
+	static void		ServerLoop(void *);
+
 	char*			GetTime();
 	char*			GetUnixTime();
 	

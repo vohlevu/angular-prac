@@ -4,12 +4,12 @@
 #include "NetworkServices.h"
 #include <ws2tcpip.h>
 #include <map>
-#include "NetworkData.h"
 using namespace std; 
 #pragma comment (lib, "Ws2_32.lib")
 
 #define DEFAULT_BUFLEN 512
-#define DEFAULT_PORT "6881" 
+#define DEFAULT_PORT "40000" 
+#define MAX_PACKET_SIZE 1000000
 
 class ServerNetwork
 {
@@ -17,6 +17,7 @@ public:
     ServerNetwork(void);
     ~ServerNetwork(void);
 
+	void sendToClientById(unsigned int client_id, char * packets, int totalSize);
 	// send data to all clients
     void sendToAll(char * packets, int totalSize);
 
