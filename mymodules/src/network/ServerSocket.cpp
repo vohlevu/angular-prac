@@ -17,6 +17,17 @@ ServerSocket::~ServerSocket(void)
 	printf("\n Close ServerSocket ....\n");
 }
 
+void ServerSocket::setSocketCallbackFunc(void (*func_pointer)(char*))
+{
+	mySocketCallbackFunc = func_pointer;
+}
+
+void ServerSocket::callback(char* data) {
+	if(mySocketCallbackFunc != NULL) {
+		mySocketCallbackFunc(data);
+	}
+}
+
 void ServerSocket::update()
 {
     // get new clients
@@ -48,9 +59,22 @@ void ServerSocket::receiveFromClients()
 		long keyCode = (network_data[1] & 0xFF)  | ((network_data[0] & 0xFF) << 8);
 		//int eventId = network_data[2];
 		printf("\033[31msmp_tcp: keyCode = 0x%X\033[0m\n", keyCode);
+		char data[20];
 		if (keyCode == 0x7000){
 			sendActionPackets(iter->first);
-		}
+		} else if (keyCode == 0xF000){
+			strcpy(data, "LEFT");
+			callback(data);
+		} else if (keyCode == 0xF002){
+			strcpy(data, "UP");
+			callback(data);
+		} else if (keyCode == 0xF001){
+			strcpy(data, "RIGHT");
+			callback(data);
+		} else if (keyCode == 0xF003){
+			strcpy(data, "DOWN");
+			callback(data);
+		} 
     }
 }
 

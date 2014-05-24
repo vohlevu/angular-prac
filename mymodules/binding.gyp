@@ -10,7 +10,8 @@
 					"./src/sysinfo.cpp",
 					"./src/network/NetworkServices.cpp",
 					"./src/network/ServerNetwork.cpp",
-					"./src/network/ServerSocket.cpp" ],
+					"./src/network/ServerSocket.cpp",
+					"./src/connect_request.cpp" ],
 		"include_dirs": [
 			"include"],
 		"libraries": [

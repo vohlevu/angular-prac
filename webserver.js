@@ -74,10 +74,6 @@ var run = function(socket){
 		console.log('Socket join room : %s', room);
 		socket.join(room);
 	});
-    socket.emit('greeting', 'Hello from Socket.IO server');
-	setTimeout(function(){	// Delay for join room
-		controller.getTotalChannel();		// Testing callback and socket emit
-	},5000);
 }
 
 var io = socketIO.listen(httpServer);
@@ -86,7 +82,7 @@ io.set('origins', '*:*');
 io.sockets.on('connection', run);
 
 var socketCallbackFunc = function (data) {
-	console.log('socketCallbackFunc : %s', data);
+	console.log('webserver.js >>>> socketCallbackFunc : %s', data);
 	if ("" != data) {
 		io.sockets.in('tcpremote').emit('event', data);
 	}

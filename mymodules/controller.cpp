@@ -3,7 +3,9 @@
 #include "dtvcontroller.h"
 #include "database.h"
 #include "sysinfo.h"
+#include "connect_request.h"
 
+using namespace node;
 using namespace v8;
 
 CDatabase	*m_cDatabase = NULL;
@@ -14,6 +16,8 @@ void initDTV();
 void ReadInfoDtvToNand();
 void initDatabase();
 void socketCallbackFunc(char* data);
+void UV_NOP(uv_work_t* req);
+void callbackToJavaScript(uv_work_t *req, int status);
 void test(void* s);
 // Returns the Nth number in the fibonacci sequence where N is the first
 // argument passed.
@@ -126,6 +130,35 @@ Handle<Value> registerSocketCallbackFunc(const Arguments& args) {
 }
 // >>>>>>>>>>>>>>>>>>>>>>> Callback <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 void socketCallbackFunc(char* data) {
+	printf("\n\n========== socketCallbackFunc =============%s\n\n", data);
+	// We need to pass this over to the nodejs thread, so it can create V8 objects
+	connect_request* ar = new connect_request();
+	ar->setData(data);
+	//ar->Ref();
+	
+	uv_work_t* uv = new uv_work_t;
+	uv->data = ar;
+	int r = uv_queue_work(uv_default_loop(), uv, UV_NOP, callbackToJavaScript);
+	if (r != 0) {
+		printf("err: %d while queuing message", r);
+		//ar->Unref();
+		delete ar;
+		delete uv;
+	}
+}
+
+void UV_NOP(uv_work_t* req) { /* No operation */ }
+
+// Use it because we call from other thread
+void callbackToJavaScript(uv_work_t *req, int status) {
+	HandleScope scope;
+	
+	connect_request* r = static_cast<connect_request* >(req->data);
+	char data[20];
+	r->getData(data);
+	printf("\n\n========== callbackToJavaScript =============%s\n\n", data);
+	
+	TryCatch try_catch;
 	// In case the operation succeeded, convention is to pass null as the
 	// first argument before the result arguments.
 	const unsigned argc = 1;
@@ -137,6 +170,10 @@ void socketCallbackFunc(char* data) {
 	// from the threadpool, you have to wrap this in a v8::TryCatch.
 	// You can also pass another handle as the "this" parameter.
 	callback->Call(Context::GetCurrent()->Global(), argc, argv);
+	
+	if (try_catch.HasCaught()) {
+		FatalException(try_catch);
+	}
 }
 // >>>>>>>>>>>>>>>>>>>>>>> RegisterModule <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 void RegisterModule(Handle<Object> target) {

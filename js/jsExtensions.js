@@ -79,7 +79,7 @@ function jsdtvepg(ext){
 	};
 	oJsdtvepg.executeKey = function (index){
 		Authentication.Debug(">>>> oMediasetting.executeKey <<<<<< " + index);
-		var strSrc;
+		/*var strSrc;
 		switch(index){
 			case 0:
 				strSrc = "http://mp3.zing.vn/embed/video/ZW6AC6OO?autostart=true";
@@ -97,7 +97,7 @@ function jsdtvepg(ext){
 				strSrc = "http://mp3.zing.vn/embed/video/ZW6ACUDO?autostart=true";
 				break;
 		}
-		$('#epgWrap #epgVideo').attr('src', strSrc);
+		$('#epgWrap #epgVideo').attr('src', strSrc);*/
 		return true;
 	};
 	oJsdtvepg.setEpgGetMode = function (){

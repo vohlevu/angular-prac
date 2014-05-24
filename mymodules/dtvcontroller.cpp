@@ -41,15 +41,19 @@ CDtvCtrl::CDtvCtrl()
 	}
 	GetTimeZone("GMT+7", &tz);
 	m_uiTunerNum = MAX_TUNER_NUM;
-
+	
+	// initialize the server
+	CDtvCtrl::server = new ServerSocket();
+	
 	// create thread with arbitrary argument for the run function
     _beginthread( ServerLoop, 0, (void*)12);
 }
 
 // initialize the server
-ServerSocket* CDtvCtrl::server = new ServerSocket();
+ServerSocket* CDtvCtrl::server = NULL;
 void CDtvCtrl::ServerLoop(void * arg) 
-{ 
+{
+	CDtvCtrl::server->setSocketCallbackFunc(&CDtvCtrl::SocketEventCallback);
     while(true) 
     {
         CDtvCtrl::server->update();
@@ -108,9 +112,18 @@ int CDtvCtrl::DeInit()
 	return err;
 }
 
+void (*CDtvCtrl::MySocketCallbackFunc)(char*) = NULL;
 void CDtvCtrl::SetSocketCallbackFunc(void (*func_pointer)(char*))
 {
-	MySocketCallbackFunc = func_pointer;
+	CDtvCtrl::MySocketCallbackFunc = func_pointer;
+}
+
+void CDtvCtrl::SocketEventCallback(char* data)
+{
+	printf(" ----------------> CDtvCtrl::SocketEventCallback  <---------------- \n");
+	if(CDtvCtrl::MySocketCallbackFunc != NULL) {
+		CDtvCtrl::MySocketCallbackFunc(data);
+	}
 }
 /******************************************************************************
 * FUNCTION: 
@@ -381,7 +394,6 @@ char* CDtvCtrl::GetChannelNameById(RMuint8 iDChannel)
 ******************************************************************************/
 RMuint16 CDtvCtrl::GetTotalChannel()
 {
-	MySocketCallbackFunc("This is socket callback from CDtvCtrl ...");
     SDChanInfo*	s_pSysInfoChan = &s_pSysInfoDtvParams->sChanInfo[m_uiCurTunerID];
     return s_pSysInfoChan->numDChannel;
 }

@@ -16,9 +16,14 @@ public:
 	void sendActionPackets(unsigned int client_id);
 	
 	void sendActionPackets();
+	
+	void setSocketCallbackFunc(void (*func_pointer)(char*));
+	
+	void callback(char* data);
 
 private:
 
+	void (*mySocketCallbackFunc)(char*);
    // IDs for the clients connecting for table in ServerNetwork 
     static unsigned int client_id;
 

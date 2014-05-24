@@ -43,13 +43,13 @@ class CDtvCtrl
 /********** variables *************/
 private:
 	TimeZone_dtv tz;
-	EventEPGDetail stEventEPG[500];
+	EventEPGDetail	stEventEPG[500];
 	SDtvParams*		s_pSysInfoDtvParams;
 	//general
 	RMuint8 		 m_uiTunerNum;
 	RMuint8 		 m_uiCurTunerID;
 	RMuint8 		 m_aDtvStatus[MAX_TUNER_NUM];
-	void 			(*MySocketCallbackFunc)(char*);
+	static void		(*MySocketCallbackFunc)(char*);
 	
 	static ServerSocket*	server;
 	
@@ -81,7 +81,8 @@ public :
 	char*			GetChannelNameById(RMuint8 iDChannel);
 	RMuint16		GetTotalChannel();
 	
-	void			SetSocketCallbackFunc(void (*func_pointer)(char*));
+	static void		SetSocketCallbackFunc(void (*func_pointer)(char*));
+	static void		SocketEventCallback(char* data);
 
 };
 

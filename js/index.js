@@ -79,10 +79,11 @@ $(document).ready(function() {
 	main.start();
 	var socket = io.connect('http://localhost:8000');
 	socket.emit('create', 'tcpremote');
-    socket.on('greeting', function(data){
-		alert(data);
-    });
     socket.on('event', function(data){
-		alert("Receive event from server : " + data);
+		var keycode = eval("Key." + data);
+		$(document).trigger({
+			type: "keydown.keycontroller",
+			keyCode: keycode
+		});
     });
 });
