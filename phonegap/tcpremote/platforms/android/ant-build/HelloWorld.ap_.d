@@ -26,8 +26,16 @@ c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\asset
 c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\spec \
 c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\spec.html \
 c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\css\index.css \
+c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\css\pageslider.css \
+c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\css\styles.css \
+c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\img\buildbot.jpg \
 c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\img\logo.png \
+c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\img\medibot.jpg \
+c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\img\ripplebot.jpg \
+c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\js\fastclick.js \
 c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\js\index.js \
+c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\js\jquery-2.1.1.min.js \
+c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\js\pageslider.js \
 c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\res\icon \
 c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\res\screen \
 c:\Users\vohlevu\Desktop\angular-prac\phonegap\tcpremote\platforms\android\assets\www\res\icon\android \

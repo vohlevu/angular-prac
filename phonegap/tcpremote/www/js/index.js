@@ -17,16 +17,43 @@
  * under the License.
  */
 var app = {
+	// The dynamically built HTML pages. In a real-life app, In a real-life app, use Handlerbar.js, Mustache.js or another template engine
+	homePage :
+		'<div>' +
+			'<header><h1>Page Slider</h1></header>' +
+			'<div class="body">' +
+				'<ul class="list">' +
+					'<li><a href="#page1"><strong>Build Bot</strong></a></li>' +
+					'<li><a href="#page2"><strong>Medi Bot</strong></a></li>' +
+					'<li><a href="#page3"><strong>Ripple Bot</strong></a></li>' +
+				'</ul>' +
+			'</div>' +
+		'</div>',
+
+	detailsPage :
+		'<div>' +
+			'<header><a href="#" class="btn">Back</a><h1>Robot</h1></header>' +
+			'<div class="body">' +
+				'<div class="robot">' +
+					'<img src="img/{{img}}"/>' +
+					'<h2>{{name}}</h2>' +
+					'<p>{{description}}</p>' +
+				'</div>' +
+			'</div>' +
+		'</div>',
+
+	slider : new PageSlider($("#app")),
     // Application Constructor
     initialize: function() {
         this.bindEvents();
+		this.route();
     },
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
+        //document.addEventListener('deviceready', this.onDeviceReady, false);
     },
     // deviceready Event Handler
     //
@@ -35,6 +62,37 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
     },
+	goHome: function(event) {
+		window.location.hash="#";
+		event.preventDefault();
+		return false;
+    },
+	// Basic page routing
+	route : function(event) {
+		var page,
+			hash = window.location.hash;
+
+		if (hash === "#page1") {
+			page = this.merge(this.detailsPage, {img: "buildbot.jpg", name: "Build Bot", description: "Lorem Ipsum"});
+	//        slider.slide($(page), "right");
+		} else if (hash === "#page2") {
+			page = this.merge(this.detailsPage, {img: "medibot.jpg", name: "Medi Bot", description: "Lorem Ipsum"});
+	//        slider.slide($(page), "right");
+		} else if (hash === "#page3") {
+			page = this.merge(this.detailsPage, {img: "ripplebot.jpg", name: "Ripple Bot", description: "Lorem Ipsum"});
+	//        slider.slide($(page), "right");
+		}
+		else {
+			page = this.homePage;
+	//        slider.slide($(homePage), "left");
+		}
+		this.slider.slidePage($(page));
+	},
+	merge : function(tpl, data) {
+		return tpl.replace("{{img}}", data.img)
+				  .replace("{{name}}", data.name)
+				  .replace("{{description}}", data.description);
+	},
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
@@ -47,3 +105,7 @@ var app = {
         console.log('Received Event: ' + id);
     }
 };
+$(window).on('hashchange', function(){app.route();});
+window.addEventListener('load', function () {
+    new FastClick(document.body);
+}, false);
