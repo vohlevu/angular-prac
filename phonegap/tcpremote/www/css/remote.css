@@ -1,0 +1,44 @@
+.app .remote {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    -webkit-transition-property: top, bottom;
+    transition-property: top, bottom;
+    -webkit-transition-duration: .2s, .2s;
+    transition-duration: .2s, .2s;
+    -webkit-transition-timing-function: linear, linear;
+    transition-timing-function: linear, linear;
+    -webkit-overflow-scrolling: touch;
+}
+
+.remote ul {
+    margin: 0px;
+    list-style: none;
+	width: 100%;
+	height: 100%;
+	padding: 5% 2% 5% 2%;
+}
+.remote ul li {
+	position: relative;
+	width: 100%;
+	height: 15%;
+}
+.remote .img-contain {
+	width: 18%;
+	height: 100%;
+	padding: 2px;
+	overflow: hidden;
+	display:inline-block;
+}
+.remote .img-contain .img {
+	position: relative;
+	/*max-width:100%;*/
+	width:100%;
+    height: auto;
+}
+
+
+
