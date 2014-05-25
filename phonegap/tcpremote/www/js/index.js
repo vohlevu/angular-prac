@@ -23,7 +23,7 @@ var app = {
 			'<header><h1>Page Slider</h1></header>' +
 			'<div class="body">' +
 				'<ul class="list">' +
-					'<li><a href="#page1"><strong>Build Bot</strong></a></li>' +
+					'<li><a href="#page1"><strong>Remote Layout</strong></a></li>' +
 					'<li><a href="#page2"><strong>Medi Bot</strong></a></li>' +
 					'<li><a href="#page3"><strong>Ripple Bot</strong></a></li>' +
 				'</ul>' +
@@ -73,16 +73,21 @@ var app = {
 			hash = window.location.hash;
 
 		if (hash === "#page1") {
-			page = this.merge(this.detailsPage, {img: "buildbot.jpg", name: "Build Bot", description: "Lorem Ipsum"});
+			//page = this.merge(this.detailsPage, {img: "buildbot.jpg", name: "Build Bot", description: "Lorem Ipsum"});
 	//        slider.slide($(page), "right");
+			var source   = $("#remote-template").html();
+			var template = Handlebars.compile(source);
+			page = template();
 		} else if (hash === "#page2") {
 			page = this.merge(this.detailsPage, {img: "medibot.jpg", name: "Medi Bot", description: "Lorem Ipsum"});
 	//        slider.slide($(page), "right");
 		} else if (hash === "#page3") {
 			page = this.merge(this.detailsPage, {img: "ripplebot.jpg", name: "Ripple Bot", description: "Lorem Ipsum"});
 	//        slider.slide($(page), "right");
-		}
-		else {
+		} else if (hash === "#btnPower") {
+			alert("btnPower");
+			return;
+		} else {
 			page = this.homePage;
 	//        slider.slide($(homePage), "left");
 		}

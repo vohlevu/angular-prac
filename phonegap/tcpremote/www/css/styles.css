@@ -14,7 +14,8 @@ header {
     height: 44px;
     background: #109adc;
     color: #FFFFFF;
-    border-bottom: 1px solid #0E5895;;
+    border-bottom: 1px solid #0E5895;
+	z-index: 1;
 }
 
 header h1 {
