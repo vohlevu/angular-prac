@@ -1,0 +1,196 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:paddingBottom="@dimen/activity_vertical_margin"
+android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+tools:context=".SampleJNI" >
+
+<TextView
+android:id="@+id/orgValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignParentLeft="true"
+android:layout_alignParentTop="true"
+android:layout_marginLeft="14dp"
+android:text="@string/original_values" />
+
+<CheckBox
+android:id="@+id/booleanValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/orgValue"
+android:layout_below="@+id/orgValue"
+android:text="@string/boolean_value" />
+
+<EditText
+android:id="@+id/intValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/booleanValue"
+android:layout_below="@+id/booleanValue"
+android:ems="10"
+android:inputType="number"
+android:hint="Integer value" >
+
+<requestFocus />
+</EditText>
+
+<EditText
+android:id="@+id/doubleValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/intValue"
+android:layout_below="@+id/intValue"
+android:ems="10"
+android:inputType="numberDecimal"
+android:hint="Double value" />
+
+<EditText
+android:id="@+id/charValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/doubleValue"
+android:layout_below="@+id/doubleValue"
+android:ems="10"
+android:maxLength="1"
+android:hint="Char value" />
+
+<EditText
+android:id="@+id/stringValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/charValue"
+android:layout_below="@+id/charValue"
+android:ems="10"
+android:hint="String value" />
+
+<EditText
+android:id="@+id/staticFieldValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/stringValue"
+android:layout_below="@+id/stringValue"
+android:ems="10"
+android:inputType="number"
+android:hint="Value of static int field" />
+
+<EditText
+android:id="@+id/instanceIntValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/stringValue"
+android:layout_below="@+id/txtArray"
+android:ems="10"
+android:inputType="number"
+android:hint="Value of Instance int" />
+
+<EditText
+android:id="@+id/instanceStrValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/charValue"
+android:layout_below="@+id/instanceIntValue"
+android:ems="10"
+android:hint="Value of Instance string" />
+
+<Button
+android:id="@+id/callNativeCode"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignBaseline="@+id/charValue"
+android:layout_alignBottom="@+id/charValue"
+android:layout_marginLeft="25dp"
+android:layout_toRightOf="@+id/charValue"
+android:text="@string/call_native_code" />
+
+<TextView
+android:id="@+id/charReturn"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/sumValue"
+android:layout_alignTop="@+id/callNativeCode"
+android:text="@string/char_return" />
+
+<TextView
+android:id="@+id/sumValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_above="@+id/doubleValue"
+android:layout_alignLeft="@+id/booleanReturn"
+android:text="@string/sum_return" />
+
+<TextView
+android:id="@+id/arrayValue"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/staticFieldValue"
+android:layout_below="@+id/staticFieldValue"
+android:text="@string/array_value" />
+
+<EditText
+android:id="@+id/txtArray"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/arrayValue"
+android:layout_below="@+id/staticFieldValue"
+android:layout_marginLeft="50dip"
+android:inputType="number"
+android:hint="@string/number_array" 
+android:width="100dip"/>
+
+
+<TextView
+android:id="@+id/stringReturn"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/charReturn"
+android:layout_alignTop="@+id/stringValue"
+android:text="@string/string_return" />
+
+<TextView
+android:id="@+id/staticFieldReturn"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/charReturn"
+android:layout_alignTop="@+id/staticFieldValue"
+android:text="@string/staticField_return" />
+
+<TextView
+android:id="@+id/arrayReturn"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignBaseline="@+id/arrayValue"
+android:layout_alignBottom="@+id/arrayValue"
+android:layout_alignLeft="@+id/stringReturn"
+android:text="@string/array_return" />
+
+<TextView
+android:id="@+id/instanceIntReturn"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/arrayReturn"
+android:layout_alignTop="@+id/instanceIntValue"
+android:text="@string/instanceInt" />
+
+<TextView
+android:id="@+id/instanceStrReturn"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignLeft="@+id/arrayReturn"
+android:layout_alignTop="@+id/instanceStrValue"
+android:text="@string/instanceString" />
+
+<TextView
+android:id="@+id/booleanReturn"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_alignBaseline="@+id/booleanValue"
+android:layout_alignBottom="@+id/booleanValue"
+android:layout_marginLeft="35dp"
+android:layout_toRightOf="@+id/callNativeCode"
+android:text="@string/boolean_return" />
+
+</RelativeLayout>

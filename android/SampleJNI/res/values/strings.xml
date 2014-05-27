@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SampleJNI</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="original_values">Original values</string>
+    <string name="boolean_value">True</string>
+    <string name="array_value">Array</string>
+    <string name="call_native_code">Call native code</string>
+    <string name="boolean_return">Boolean return</string>
+    <string name="sum_return">Sum: </string>
+    <string name="char_return">Char return</string>
+    <string name="string_return">String return: </string>
+    <string name="array_return">Array return</string>
+    <string name="instanceInt">Instance int return</string>
+    <string name="instanceString">Instance string return</string>
+    <string name="staticField_return">Static field return</string>
+    <string name="number_array">Number array</string>
+
+</resources>
