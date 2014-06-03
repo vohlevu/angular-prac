@@ -43,6 +43,8 @@ var app = {
 		'</div>',
 
 	slider : new PageSlider($("#app")),
+	key : "",
+	host : "10.0.2.2",
     // Application Constructor
     initialize: function() {
         this.bindEvents();
@@ -78,6 +80,7 @@ var app = {
 			var source   = $("#remote-template").html();
 			var template = Handlebars.compile(source);
 			page = template();
+			this.connect();
 		} else if (hash === "#page2") {
 			page = this.merge(this.detailsPage, {img: "medibot.jpg", name: "Medi Bot", description: "Lorem Ipsum"});
 	//        slider.slide($(page), "right");
@@ -85,7 +88,7 @@ var app = {
 			page = this.merge(this.detailsPage, {img: "ripplebot.jpg", name: "Ripple Bot", description: "Lorem Ipsum"});
 	//        slider.slide($(page), "right");
 		} else if (hash === "#btnPower") {
-			alert("btnPower");
+			this.send("Send from Phonegap App");
 			return;
 		} else {
 			page = this.homePage;
@@ -108,7 +111,25 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
-    }
+    },
+    stub: function(message) {
+		console.log(message);
+	},
+    connect: function() {
+		window.tlantic.plugins.socket.connect(this.onConnect, this.stub, this.host, 18002);
+	},
+    send: function(data) {
+		window.tlantic.plugins.socket.send(this.stub, this.stub, app.key, data);
+	},
+    onConnect: function(k) {
+		app.key = k;
+	},
+    disconnect: function() {
+		window.tlantic.plugins.socket.disconnect(this.stub, this.stub, app.key);
+	},
+    isConnected: function() {
+		window.tlantic.plugins.socket.isConnected(app.key, this.stub, this.stub);
+	}
 };
 $(window).on('hashchange', function(){app.route();});
 window.addEventListener('load', function () {
