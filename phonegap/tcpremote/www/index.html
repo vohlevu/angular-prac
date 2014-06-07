@@ -33,65 +33,15 @@
         <div id="app">
 			<script id="remote-template" type="text/x-handlebars-template">
 				<div>
-					<header><a href="#" class="btn">Back</a><h1>STB Remote</h1></header>
 					<div class="remote">
-						<ul class="row">
+						<ul>
+							{{#each this}}
 							<li>
-								<a class="img-contain" href="#btnPower" ontouchstart="return true;"><img class="img" src="img/btn/power.png"></a>
-								<a class="img-contain"><img class="img" src="img/btn/reboot.png"></a>
-								<a class="img-contain"><img class="img" src="img/btn/mute.png"></a>
-								<a class="img-contain"><img class="img" src="img/btn/voldown.png"></a>
-								<a class="img-contain"><img class="img" src="img/btn/volup.png"></a>
+								{{#each this}}
+								<a class="img-contain" id="{{id}}" ontouchstart="return true;"><img class="img" src="{{img}}"></a>
+								{{/each}}
 							</li>
-							<li>
-								<div class="img-contain"><img class="img" src="img/btn/num1.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/num2.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/num3.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/num4.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/num5.png"></div>
-							</li>
-							<li>
-								<div class="img-contain"><img class="img" src="img/btn/num6.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/num7.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/num8.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/num9.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/num0.png"></div>
-							</li>
-							<li>
-								<div class="img-contain"><img class="img" src="img/btn/play.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/menu.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/up.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/home.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/delete.png"></div>
-							</li>
-							<li>
-								<div class="img-contain"><img class="img" src="img/btn/pause.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/left.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/ok.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/right.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/capsnum.png"></div>
-							</li>
-							<li>
-								<div class="img-contain"><img class="img" src="img/btn/stop.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/info.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/down.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/epg.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/mouse.png"></div>
-							</li>
-							<li>
-								<div class="img-contain"><img class="img" src="img/btn/prev.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/rev.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/next.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/fwd.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/keyboard.png"></div>
-							</li>
-							<li>
-								<div class="img-contain"><img class="img" src="img/btn/red.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/green.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/yellow.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/blue.png"></div>
-								<div class="img-contain"><img class="img" src="img/btn/back.png"></div>
-							</li>
+							{{/each}}
 						</ul>
 					</div>
 				</div>
@@ -104,6 +54,7 @@
         <script type="text/javascript" src="js/pageslider.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
+			var app = new app();
             app.initialize();
         </script>
     </body>
