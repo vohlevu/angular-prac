@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+           id="com.vohlevu.discovery"
+      version="0.1.0">
+    <name>Discovery</name>
+    <description>Sample PhoneGap Discovery Plugin</description>
+    <license>MIT</license>
+    <keywords>phonegap,discovery</keywords>
+ 
+ 
+    <js-module src="www/discovery.js" name="Discovery">
+        <clobbers target="window.discovery" />
+    </js-module>
+ 
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Discovery">
+                <param name="android-package" value="com.vohlevu.discovery.DiscoveryPlugin"/>
+            </feature>
+        </config-file>
+ 
+        <source-file src="src/android/DiscoveryPlugin.java" target-dir="src/com/vohlevu/discovery" />      
+     </platform>          
+</plugin>

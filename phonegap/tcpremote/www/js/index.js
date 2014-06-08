@@ -90,6 +90,7 @@ function app() {
 	];
     // Application Constructor
     oApp.initialize = function() {
+        console.log('>>>>>>>>>>>>>>>> oApp.initialize <<<<<<<<<<<<<<<<');
         oApp.bindEvents();
 		oApp.route();
 		arrRemoteBtn = oApp.transform( arrRemoteBtn );
@@ -119,17 +120,18 @@ function app() {
 			var source   = $("#remote-template").html();
 			var template = Handlebars.compile(source);
 			page = template(arrRemoteBtn);
-			//oApp.connect();
+			oApp.connect();
 		} else if (hash === "#page2") {
 			page = oApp.merge(detailsPage, {img: "medibot.jpg", name: "Medi Bot", description: "Lorem Ipsum"});
 		} else if (hash === "#page3") {
 			page = oApp.merge(detailsPage, {img: "ripplebot.jpg", name: "Ripple Bot", description: "Lorem Ipsum"});
+			window.discovery.start(oApp.stub, oApp.stub);
 		} else {
 			page = homePage;
 		}
 		slider.slidePage($(page));
 		$('a.img-contain').click(function(event){
-			//oApp.send("Send from Phonegap App >> id:" + this.id);
+			oApp.send("Send from Phonegap App >> id:" + this.id);
 			//alert(this.id);
 			event.preventDefault();
 		});
@@ -145,6 +147,7 @@ function app() {
     };
     oApp.stub = function(message) {
 		console.log(message);
+		//adb logcat *:S CordovaLog:D
 	};
     oApp.connect = function() {
 		window.tlantic.plugins.socket.connect(oApp.onConnect, oApp.stub, host, 18002);
