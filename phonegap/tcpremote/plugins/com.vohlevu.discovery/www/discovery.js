@@ -17,6 +17,15 @@ var discovery =  {
             'getNetworkInfo', // with this action name
             []
         );
+    },
+    setShowToastCallback: function(showToastCallback, errorCallback) {
+        cordova.exec(
+            showToastCallback,
+            errorCallback,
+            'Discovery',
+            'setShowToastCallback', // with this action name
+            []
+        );
     }
 }
 module.exports = discovery;

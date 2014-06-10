@@ -126,6 +126,7 @@ function app() {
 		} else if (hash === "#page3") {
 			page = oApp.merge(detailsPage, {img: "ripplebot.jpg", name: "Ripple Bot", description: "Lorem Ipsum"});
 			window.discovery.start(oApp.stub, oApp.stub);
+			window.discovery.setShowToastCallback(oApp.showToast, oApp.stub);
 			window.discovery.getNetworkInfo(oApp.getNetworkInfo, oApp.stub);
 		} else {
 			page = homePage;
@@ -146,10 +147,14 @@ function app() {
     oApp.receivedEvent = function(id) {
         console.log('Received Event: ' + id);
     };
+    oApp.showToast = function(message) {
+		window.plugins.toast.show(message, 'short', 'bottom', 
+				function(a){console.log('toast success: ' + a)},
+				function(b){console.log('toast error: ' + b)});
+	};
     oApp.getNetworkInfo = function(data) {
 		console.log(data.IP);
 		console.log(data.SSID);
-		//adb logcat *:S CordovaLog:D
 	};
     oApp.stub = function(message) {
 		console.log(message);

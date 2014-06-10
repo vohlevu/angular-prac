@@ -15,6 +15,9 @@ public class DiscoveryPlugin extends CordovaPlugin {
 
 	public static final String ACTION_START_ENTRY = "start";
 	public static final String ACTION_GET_NETWORK_INFO_ENTRY = "getNetworkInfo";
+	public static final String ACTION_SET_SHOW_TOAST_CALLBACK_ENTRY = "setShowToastCallback";
+	
+	private static CallbackContext showToastCallback = null;
 	
 	public DiscoveryPlugin() {
 	}
@@ -24,6 +27,9 @@ public class DiscoveryPlugin extends CordovaPlugin {
 		try {
 			if (ACTION_START_ENTRY.equals(action)) {
 				callbackContext.success("Success...");
+				return true;
+			} else if (ACTION_SET_SHOW_TOAST_CALLBACK_ENTRY.equals(action)) {
+				showToastCallback = callbackContext;
 				return true;
 			} else if (ACTION_GET_NETWORK_INFO_ENTRY.equals(action)) {
 				Context context = cordova.getActivity().getApplicationContext();
@@ -51,10 +57,19 @@ public class DiscoveryPlugin extends CordovaPlugin {
 				String info_in_str = String.format("SSID: %s", net.ssid);
 				obj.put("IP", info_ip_str);
 				obj.put("SSID", info_in_str);
+				DiscoveryPlugin.showToast(info_ip_str);
 			}
 		} catch (Exception e) {
 			System.err.println("Exception: " + e.getMessage());
 		}
 		return obj;
+	}
+	
+	public static void showToast(String message) {
+		if (showToastCallback != null) {
+			PluginResult result = new PluginResult(PluginResult.Status.OK, message);
+			result.setKeepCallback(true);
+			showToastCallback.sendPluginResult(result);
+		}
 	}
 }
