@@ -8,6 +8,15 @@ var discovery =  {
             'start', // with this action name
             []	 // and this array of custom arguments to create our entry
         );
+    },
+    getNetworkInfo: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            'Discovery',
+            'getNetworkInfo', // with this action name
+            []
+        );
     }
 }
 module.exports = discovery;

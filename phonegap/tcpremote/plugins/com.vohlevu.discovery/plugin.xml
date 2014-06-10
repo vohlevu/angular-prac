@@ -20,7 +20,12 @@
                 <param name="android-package" value="com.vohlevu.discovery.DiscoveryPlugin"/>
             </feature>
         </config-file>
- 
-        <source-file src="src/android/DiscoveryPlugin.java" target-dir="src/com/vohlevu/discovery" />      
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+			<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+			<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+        </config-file>
+        <source-file src="src/android/DiscoveryPlugin.java" target-dir="src/com/vohlevu/discovery" />
+        <source-file src="src/android/NetInfo.java" target-dir="src/com/vohlevu/discovery/utils" />
      </platform>          
 </plugin>

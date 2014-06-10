@@ -2,21 +2,35 @@ package com.vohlevu.discovery;
  
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import com.vohlevu.discovery.utils.NetInfo;
 
 public class DiscoveryPlugin extends CordovaPlugin {
+
 	public static final String ACTION_START_ENTRY = "start";
+	public static final String ACTION_GET_NETWORK_INFO_ENTRY = "getNetworkInfo";
+	
+	public DiscoveryPlugin() {
+	}
+	
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		try {
 			if (ACTION_START_ENTRY.equals(action)) {
-
-			   callbackContext.success("Success...");
-			   return true;
+				callbackContext.success("Success...");
+				return true;
+			} else if (ACTION_GET_NETWORK_INFO_ENTRY.equals(action)) {
+				Context context = cordova.getActivity().getApplicationContext();
+				PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, this.loadData(context));
+				pluginResult.setKeepCallback(true);
+				callbackContext.sendPluginResult(pluginResult);
+				return true;
 			}
 			callbackContext.error("Invalid action");
 			return false;
@@ -25,5 +39,22 @@ public class DiscoveryPlugin extends CordovaPlugin {
 			callbackContext.error(e.getMessage());
 			return false;
 		}
+	}
+	private JSONObject loadData(Context context) {
+		JSONObject obj = new JSONObject();
+		try {
+			NetInfo net = new NetInfo(context);
+			net.getWifiInfo();
+			if (net.ssid != null) {
+				net.getIp();
+				String info_ip_str = String.format("IP: %s (%s)", net.ip, net.intf);
+				String info_in_str = String.format("SSID: %s", net.ssid);
+				obj.put("IP", info_ip_str);
+				obj.put("SSID", info_in_str);
+			}
+		} catch (Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+		}
+		return obj;
 	}
 }
