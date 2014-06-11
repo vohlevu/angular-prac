@@ -41,10 +41,22 @@ function app() {
 				'</div>' +
 			'</div>' +
 		'</div>';
+	var listPage =
+		'<div>' +
+			'<div class="body">' +
+				'<div class="robot" data-role="content">' +
+					'<div id="list-wrapper">' +
+						'<ul data-role="listview"  id="btn-list">' +
+						'</ul>' +
+					'</div>' +
+				'</div>' +
+			'</div>' +
+		'</div>';
 
 	var slider = new PageSlider($("#app"));
 	var key = "";
 	var host = "10.0.2.2";
+	var arrListview;
 	var arrRemoteBtn = [
 		{ id: 'btnPower', img: 'img/btn/power.png' },
 		{ id: 'btnReboot', img: 'img/btn/reboot.png' },
@@ -92,6 +104,7 @@ function app() {
         console.log('>>>>>>>>>>>>>>>> oApp.initialize <<<<<<<<<<<<<<<<');
         oApp.bindEvents();
 		oApp.route();
+		arrListview = arrRemoteBtn;
 		arrRemoteBtn = oApp.transform( arrRemoteBtn );
     };
     // Bind Event Listeners
@@ -110,6 +123,14 @@ function app() {
 		event.preventDefault();
 		return false;
     };
+	oApp.showList = function() {
+		var length = arrListview.length
+		for (var i = 0 ; i < length ; i++) {
+			$('#btn-list').append('<li><a href=""><img src="'+arrListview[i].img+'"/><h3>' + arrListview[i].id + '</h3></a></li>');
+		}
+		$('#btn-list').listview('refresh');
+		var myScroll = new IScroll('#list-wrapper');
+    };
 	// Basic page routing
 	oApp.route = function(event) {
 		var page,
@@ -121,7 +142,7 @@ function app() {
 			page = template(arrRemoteBtn);
 			oApp.connect();
 		} else if (hash === "#page2") {
-			page = oApp.merge(detailsPage, {img: "medibot.jpg", name: "Medi Bot", description: "Lorem Ipsum"});
+			page = listPage;
 		} else if (hash === "#page3") {
 			page = oApp.merge(detailsPage, {img: "ripplebot.jpg", name: "Ripple Bot", description: "Lorem Ipsum"});
 			window.discovery.start(oApp.stub, oApp.stub);
@@ -131,6 +152,9 @@ function app() {
 			page = homePage;
 		}
 		slider.slidePage($(page));
+		if (hash === "#page2") {
+			oApp.showList();
+		}
 		$('a.img-contain').click(function(event){
 			oApp.send("Send from Phonegap App >> id:" + this.id);
 			//alert(this.id);
