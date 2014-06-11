@@ -6,6 +6,12 @@ a {
     -webkit-touch-callout: none;
 }
 
+/* Modify page transition time*/
+.in, .out {
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-duration: 250ms !important;
+}
+
 .page .body {
     position: absolute;
     top: 0px;

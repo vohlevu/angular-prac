@@ -18,21 +18,8 @@
  */
 function app() {
 	var oApp = this;
-	// The dynamically built HTML pages. In a real-life app, In a real-life app, use Handlerbar.js, Mustache.js or another template engine
-	var homePage =
-		'<div>' +
-			'<div class="body">' +
-				'<div class="header"><div class="title">STB Remote</div></div>' +
-				'<ul class="list">' +
-					'<li><a href="#page1">Remote Layout</a></li>' +
-					'<li><a href="#page2">Medi Bot</strong></a></li>' +
-					'<li><a href="#page3">Ripple Bot</a></li>' +
-				'</ul>' +
-			'</div>' +
-		'</div>';
-
 	var detailsPage =
-		'<div>' +
+		'<div data-role="page" id="page2" class="page">' +
 			'<div class="body">' +
 				'<div class="robot">' +
 					'<img src="img/{{img}}"/>' +
@@ -41,22 +28,8 @@ function app() {
 				'</div>' +
 			'</div>' +
 		'</div>';
-	var listPage =
-		'<div>' +
-			'<div class="body">' +
-				'<div class="robot" data-role="content">' +
-					'<div id="list-wrapper">' +
-						'<ul data-role="listview"  id="btn-list">' +
-						'</ul>' +
-					'</div>' +
-				'</div>' +
-			'</div>' +
-		'</div>';
-
-	var slider = new PageSlider($("#app"));
 	var key = "";
 	var host = "10.0.2.2";
-	var arrListview;
 	var arrRemoteBtn = [
 		{ id: 'btnPower', img: 'img/btn/power.png' },
 		{ id: 'btnReboot', img: 'img/btn/reboot.png' },
@@ -100,67 +73,37 @@ function app() {
 		{ id: 'btnBack', img: 'img/btn/back.png' }
 	];
     // Application Constructor
-    oApp.initialize = function() {
+	oApp.initialize = function() {
         console.log('>>>>>>>>>>>>>>>> oApp.initialize <<<<<<<<<<<<<<<<');
+		oApp.appendPage1();
+		oApp.appendPage2();
         oApp.bindEvents();
-		oApp.route();
-		arrListview = arrRemoteBtn;
-		arrRemoteBtn = oApp.transform( arrRemoteBtn );
     };
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
+	oApp.appendPage1 = function() {
+		var arrTmp = oApp.transform( arrRemoteBtn );
+		var source = $("#remote-template").html();
+		var template = Handlebars.compile(source);
+		var page = $(template(arrTmp));
+		page.appendTo("#app"/*$.mobile.pageContainer*/);
+    };
+	oApp.appendPage2 = function() {
+		var page = $(oApp.merge(detailsPage, {img: "ripplebot.jpg", name: "Ripple Bot", description: "Lorem Ipsum"}));
+		page.appendTo("#app"/*$.mobile.pageContainer*/);
+    };
     oApp.bindEvents = function() {
         //document.addEventListener('deviceready', oApp.onDeviceReady, false);
     };
-    // deviceready Event Handler
     oApp.onDeviceReady = function() {
         oApp.receivedEvent('deviceready');
     };
-	oApp.goHome = function(event) {
-		window.location.hash="#";
-		event.preventDefault();
-		return false;
-    };
 	oApp.showList = function() {
-		var length = arrListview.length
+		var length = arrRemoteBtn.length
 		for (var i = 0 ; i < length ; i++) {
-			$('#btn-list').append('<li><a href=""><img src="'+arrListview[i].img+'"/><h3>' + arrListview[i].id + '</h3></a></li>');
+			$('#btn-list').append('<li><a href=""><img src="'+arrRemoteBtn[i].img+'"/><h3>' + arrRemoteBtn[i].id + '</h3></a></li>');
 		}
 		$('#btn-list').listview('refresh');
 		var myScroll = new IScroll('#list-wrapper');
     };
-	// Basic page routing
-	oApp.route = function(event) {
-		var page,
-			hash = window.location.hash;
-
-		if (hash === "#page1") {
-			var source   = $("#remote-template").html();
-			var template = Handlebars.compile(source);
-			page = template(arrRemoteBtn);
-			oApp.connect();
-		} else if (hash === "#page2") {
-			page = listPage;
-		} else if (hash === "#page3") {
-			page = oApp.merge(detailsPage, {img: "ripplebot.jpg", name: "Ripple Bot", description: "Lorem Ipsum"});
-			window.discovery.start(oApp.stub, oApp.stub);
-			window.discovery.setShowToastCallback(oApp.showToast, oApp.stub);
-			window.discovery.getNetworkInfo(oApp.getNetworkInfo, oApp.stub);
-		} else {
-			page = homePage;
-		}
-		slider.slidePage($(page));
-		if (hash === "#page2") {
-			oApp.showList();
-		}
-		$('a.img-contain').click(function(event){
-			oApp.send("Send from Phonegap App >> id:" + this.id);
-			//alert(this.id);
-			event.preventDefault();
-		});
-	};
 	oApp.merge = function(tpl, data) {
 		return tpl.replace("{{img}}", data.img)
 				  .replace("{{name}}", data.name)
@@ -213,8 +156,27 @@ function app() {
 		return result;
 	};
 };
-$(window).on('hashchange', function(){
-	app.route();
+$(document).on('vclick', 'a.img-contain', function(){
+	app.send("Send from Phonegap App >> id:" + this.id);
+	event.preventDefault();
+});
+$(document).on('vclick', '#home-menu-list li a', function(){
+	var hash = $(this).attr('href');
+	$.mobile.changePage( hash, { transition: "slide", changeHash: false });
+});
+$(document).bind( "pagebeforechange", function( e, data ) {
+	if ( typeof data.toPage === "string" ) {
+		var u = $.mobile.path.parseUrl( data.toPage );
+		if ( u.hash.search(/^#page1/) !== -1 ) {
+			app.connect();
+		} else if ( u.hash.search(/^#page2/) !== -1 ) {
+			app.showList();
+		} else if ( u.hash.search(/^#page3/) !== -1 ) {
+			window.discovery.start(app.stub, app.stub);
+			window.discovery.setShowToastCallback(app.showToast, app.stub);
+			window.discovery.getNetworkInfo(app.getNetworkInfo, app.stub);
+		}
+	}
 });
 window.addEventListener('load', function () {
     new FastClick(document.body);
