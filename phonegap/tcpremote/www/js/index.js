@@ -194,4 +194,7 @@ $(window).on('hashchange', function(){
 });
 window.addEventListener('load', function () {
     new FastClick(document.body);
+	document.body.addEventListener('touchmove', function(e) {
+									e.preventDefault();
+								}, false);
 }, false);
