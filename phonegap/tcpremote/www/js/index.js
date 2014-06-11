@@ -21,19 +21,18 @@ function app() {
 	// The dynamically built HTML pages. In a real-life app, In a real-life app, use Handlerbar.js, Mustache.js or another template engine
 	var homePage =
 		'<div>' +
-			'<header><h1>Page Slider</h1></header>' +
 			'<div class="body">' +
+				'<div class="header"><div class="title">STB Remote</div></div>' +
 				'<ul class="list">' +
-					'<li><a href="#page1"><strong>Remote Layout</strong></a></li>' +
-					'<li><a href="#page2"><strong>Medi Bot</strong></a></li>' +
-					'<li><a href="#page3"><strong>Ripple Bot</strong></a></li>' +
+					'<li><a href="#page1">Remote Layout</a></li>' +
+					'<li><a href="#page2">Medi Bot</strong></a></li>' +
+					'<li><a href="#page3">Ripple Bot</a></li>' +
 				'</ul>' +
 			'</div>' +
 		'</div>';
 
 	var detailsPage =
 		'<div>' +
-			'<header><a href="#" class="btn">Back</a><h1>Robot</h1></header>' +
 			'<div class="body">' +
 				'<div class="robot">' +
 					'<img src="img/{{img}}"/>' +
