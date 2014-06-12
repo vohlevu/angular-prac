@@ -99,10 +99,11 @@ function app() {
 	oApp.showList = function() {
 		var length = arrRemoteBtn.length
 		for (var i = 0 ; i < length ; i++) {
-			$('#btn-list').append('<li><a href=""><img src="'+arrRemoteBtn[i].img+'"/><h3>' + arrRemoteBtn[i].id + '</h3></a></li>');
+			// <img src="'+arrRemoteBtn[i].img+'"/>
+			$('#list-wrapper div .iscroll-content').append('<li><a href=""><h3>' + arrRemoteBtn[i].id + '</h3></a></li>');
 		}
-		$('#btn-list').listview('refresh');
-		var myScroll = new IScroll('#list-wrapper');
+		$('#list-wrapper').trigger('create');
+		$('#list-wrapper').iscrollview("refresh");
     };
 	oApp.merge = function(tpl, data) {
 		return tpl.replace("{{img}}", data.img)
@@ -156,6 +157,10 @@ function app() {
 		return result;
 	};
 };
+$(document).on('vclick', '#list-wrapper li a', function(){
+	
+	event.preventDefault();
+});
 $(document).on('vclick', 'a.img-contain', function(){
 	app.send("Send from Phonegap App >> id:" + this.id);
 	event.preventDefault();
@@ -170,13 +175,16 @@ $(document).bind( "pagebeforechange", function( e, data ) {
 		if ( u.hash.search(/^#page1/) !== -1 ) {
 			app.connect();
 		} else if ( u.hash.search(/^#page2/) !== -1 ) {
-			app.showList();
-		} else if ( u.hash.search(/^#page3/) !== -1 ) {
 			window.discovery.start(app.stub, app.stub);
 			window.discovery.setShowToastCallback(app.showToast, app.stub);
 			window.discovery.getNetworkInfo(app.getNetworkInfo, app.stub);
+		} else if ( u.hash.search(/^#page3/) !== -1 ) {
+			//app.showList();
 		}
 	}
+});
+$(document).on('pagebeforeshow', '#page3', function(){
+	app.showList();
 });
 window.addEventListener('load', function () {
     new FastClick(document.body);
