@@ -28,8 +28,6 @@ function app() {
 				'</div>' +
 			'</div>' +
 		'</div>';
-	var key = "";
-	var host = "10.0.2.2";
 	var arrRemoteBtn = [
 		{ id: 'btnPower', img: 'img/btn/power.png' },
 		{ id: 'btnReboot', img: 'img/btn/reboot.png' },
@@ -72,6 +70,9 @@ function app() {
 		{ id: 'btnBlue', img: 'img/btn/blue.png' },
 		{ id: 'btnBack', img: 'img/btn/back.png' }
 	];
+	var key = "";
+	var host = "10.0.2.2";
+	
     // Application Constructor
 	oApp.initialize = function() {
         console.log('>>>>>>>>>>>>>>>> oApp.initialize <<<<<<<<<<<<<<<<');
@@ -79,6 +80,7 @@ function app() {
 		oApp.appendPage2();
         oApp.bindEvents();
     };
+	
 	oApp.appendPage1 = function() {
 		var arrTmp = oApp.transform( arrRemoteBtn );
 		var source = $("#remote-template").html();
@@ -86,16 +88,21 @@ function app() {
 		var page = $(template(arrTmp));
 		page.appendTo("#app"/*$.mobile.pageContainer*/);
     };
+	
 	oApp.appendPage2 = function() {
 		var page = $(oApp.merge(detailsPage, {img: "ripplebot.jpg", name: "Ripple Bot", description: "Lorem Ipsum"}));
 		page.appendTo("#app"/*$.mobile.pageContainer*/);
     };
+	
     oApp.bindEvents = function() {
-        //document.addEventListener('deviceready', oApp.onDeviceReady, false);
+        document.addEventListener('deviceready', oApp.onDeviceReady, false);
     };
+	
     oApp.onDeviceReady = function() {
-        oApp.receivedEvent('deviceready');
+		$(document).bind('backbutton', onPressBack);
+        //oApp.receivedEvent('deviceready');
     };
+	
 	oApp.showList = function() {
 		var length = arrRemoteBtn.length
 		for (var i = 0 ; i < length ; i++) {
@@ -105,43 +112,54 @@ function app() {
 		$('#list-wrapper').trigger('create');
 		$('#list-wrapper').iscrollview("refresh");
     };
+	
 	oApp.merge = function(tpl, data) {
 		return tpl.replace("{{img}}", data.img)
 				  .replace("{{name}}", data.name)
 				  .replace("{{description}}", data.description);
 	};
+	
     // Update DOM on a Received Event
     oApp.receivedEvent = function(id) {
         console.log('Received Event: ' + id);
     };
+	
     oApp.showToast = function(message) {
 		window.plugins.toast.show(message, 'short', 'bottom', 
 				function(a){console.log('toast success: ' + a)},
 				function(b){console.log('toast error: ' + b)});
 	};
+	
     oApp.getNetworkInfo = function(data) {
 		console.log(data.IP);
 		console.log(data.SSID);
 	};
+	
     oApp.stub = function(message) {
 		console.log(message);
 		//adb logcat *:S CordovaLog:D
 	};
+	
     oApp.connect = function() {
 		window.tlantic.plugins.socket.connect(oApp.onConnect, oApp.stub, host, 18002);
 	};
+	
     oApp.send = function(data) {
 		window.tlantic.plugins.socket.send(oApp.stub, oApp.stub, key, data);
 	};
+	
     oApp.onConnect = function(k) {
 		key = k;
 	};
+	
     oApp.disconnect = function() {
 		window.tlantic.plugins.socket.disconnect(oApp.stub, oApp.stub, key);
 	};
+	
     oApp.isConnected = function() {
 		window.tlantic.plugins.socket.isConnected(key, oApp.stub, oApp.stub);
 	};
+	
 	oApp.transform = function ( arr ) {
 		var result = [], temp = [];
 		arr.forEach( function ( elem, i ) {
@@ -155,15 +173,17 @@ function app() {
 			result.push( temp );
 		}
 		return result;
-	};
+	};	
 };
 $(document).on('vclick', '#list-wrapper li a', function(){
 	
-	event.preventDefault();
+	//event.preventDefault();
+	return false;
 });
 $(document).on('vclick', 'a.img-contain', function(){
 	app.send("Send from Phonegap App >> id:" + this.id);
-	event.preventDefault();
+	//event.preventDefault();
+	return false;
 });
 $(document).on('vclick', '#home-menu-list li a', function(){
 	var hash = $(this).attr('href');
@@ -192,3 +212,42 @@ window.addEventListener('load', function () {
 									e.preventDefault();
 								}, false);
 }, false);
+
+// Handle back button press
+var pageHistoryCount = 0;
+var goingBack = false;
+//var stackPage = new Array();
+
+$(document).bind("pageshow", function showPage (e, data) {
+	if (goingBack) {
+		goingBack = false;
+	} else {
+		pageHistoryCount++;
+		console.log("Showing page #"+pageHistoryCount);
+	}
+});
+
+function exitApp () {
+	console.log("Exiting app");
+	navigator.app.exitApp();
+};
+
+function onPressBack (e) {
+	e.preventDefault();
+	if(pageHistoryCount > 0) pageHistoryCount--;
+	if (pageHistoryCount == 0) {
+
+		navigator.notification.confirm("Are you sure you want to quit?", function(result){
+			if(result == 2){
+				exitApp();
+			}else{
+				pageHistoryCount++;
+			}
+		}, 'Quit My App', 'Cancel,Ok');
+	} else {
+		goingBack = true;
+		console.log("Going back to page #"+pageHistoryCount);
+		//navigator.app.backHistory();
+		$.mobile.changePage("#homepage", {transition: 'slide',	reverse: true });	//$.mobile.back();
+	}
+};
