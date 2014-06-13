@@ -44,6 +44,18 @@ body {
     width:100%;
 }
 
+.ui-body-a, .ui-overlay-a, .ui-page-theme-a { 
+	text-shadow:0 0 0;
+	background: transparent;
+}
+
+.ui-page-theme-a a {
+	font-weight:normal;
+}
+
+.ui-page-theme-a a:visited, .ui-page-theme-a a:hover {
+	color:white;
+}
 /* Portrait layout (default) */
 .app {
     position:absolute;             /* position in the center of the screen */
