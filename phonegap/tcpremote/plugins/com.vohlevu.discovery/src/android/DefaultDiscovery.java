@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 import com.vohlevu.discovery.utils.HostBean;
 import com.vohlevu.discovery.utils.NetInfo;
 
+import android.util.Log;
+
 public class DefaultDiscovery extends AbstractDiscovery {
 
     private final String TAG = "DefaultDiscovery";
@@ -40,12 +42,12 @@ public class DefaultDiscovery extends AbstractDiscovery {
         if (mDiscover != null) {
             final Discovery discover = mDiscover.get();
             if (discover != null) {
-                /*Log.v(TAG, "start=" + NetInfo.getIpFromLongUnsigned(start) + " (" + start
+                Log.v(TAG, "start=" + NetInfo.getIpFromLongUnsigned(start) + " (" + start
                         + "), end=" + NetInfo.getIpFromLongUnsigned(end) + " (" + end
-                        + "), length=" + size);*/
+                        + "), length=" + size);
                 mPool = Executors.newFixedThreadPool(THREADS);
                 if (ip <= end && ip >= start) {
-                    //Log.i(TAG, "Back and forth scanning");
+                    Log.i(TAG, "Back and forth scanning");
                     // gateway
                     launch(start);
 
@@ -73,7 +75,7 @@ public class DefaultDiscovery extends AbstractDiscovery {
                         }
                     }
                 } else {
-                    //Log.i(TAG, "Sequencial scanning");
+                    Log.i(TAG, "Sequencial scanning");
                     for (long i = start; i <= end; i++) {
                         launch(i);
                     }
@@ -82,13 +84,13 @@ public class DefaultDiscovery extends AbstractDiscovery {
                 try {
                     if(!mPool.awaitTermination(TIMEOUT_SCAN, TimeUnit.SECONDS)){
                         mPool.shutdownNow();
-                        //Log.e(TAG, "Shutting down pool");
+                        Log.e(TAG, "Shutting down pool");
                         if(!mPool.awaitTermination(TIMEOUT_SHUTDOWN, TimeUnit.SECONDS)){
-                            //Log.e(TAG, "Pool did not terminate");
+                            Log.e(TAG, "Pool did not terminate");
                         }
                     }
                 } catch (InterruptedException e){
-                    //Log.e(TAG, e.getMessage());
+                    Log.e(TAG, e.getMessage());
                     mPool.shutdownNow();
                     Thread.currentThread().interrupt();
                 }
@@ -108,7 +110,7 @@ public class DefaultDiscovery extends AbstractDiscovery {
     		out.write(Utils.getByteArrayNameCode());
     		out.flush();
     	} catch (Exception e) {
-			//Log.e(TAG, "Error sending:  " + e.getMessage());
+			Log.e(TAG, "Error sending:  " + e.getMessage());
 		}
     }
 	
@@ -127,7 +129,7 @@ public class DefaultDiscovery extends AbstractDiscovery {
             	}
             }
         } catch (IOException e) {
-        	//Log.e(TAG, "Error receiving response:  " + e.getMessage());
+        	Log.e(TAG, "Error receiving response:  " + e.getMessage());
         }
         return host;
     }
@@ -144,7 +146,7 @@ public class DefaultDiscovery extends AbstractDiscovery {
                 publish(null);
                 return;
             }
-            //Log.e(TAG, "run="+addr);
+            Log.e(TAG, "run="+addr);
             String progressMessage = "Discovering... " + addr;
             mDiscover.get().updateProgress(progressMessage);
             // Create host object
@@ -158,7 +160,7 @@ public class DefaultDiscovery extends AbstractDiscovery {
                     return;
                 }
 				publish(host);
-                //Log.e(TAG, "found using InetAddress ping "+addr);
+                Log.e(TAG, "found using InetAddress ping "+addr);
                 // Custom check
                 /*Socket s = new Socket();
                 BufferedOutputStream out = null;
@@ -174,8 +176,8 @@ public class DefaultDiscovery extends AbstractDiscovery {
                             sendDataWithString(out);
                             host = receiveDataFromServer(host, in);
                         	publish(host);
-                        	//Log.v(TAG, "found using TCP connect "+addr);
-                        	//Log.v(TAG, "found using TCP connect "+addr+" on port=" + DPORTS[i]+" [name=" + host.hostname+"]");
+                        	Log.v(TAG, "found using TCP connect "+addr);
+                        	Log.v(TAG, "found using TCP connect "+addr+" on port=" + DPORTS[i]+" [name=" + host.hostname+"]");
                         	return;
                         }
 					} catch (IOException e) {
@@ -187,7 +189,7 @@ public class DefaultDiscovery extends AbstractDiscovery {
                 publish(null);*/
             } catch (IOException e) {
                 publish(null);
-                //Log.e(TAG, e.getMessage());
+                Log.e(TAG, e.getMessage());
             } 
         }
     }

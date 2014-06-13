@@ -1,11 +1,19 @@
 var discovery =  {
-    start: function(successCallback, errorCallback) {
-		//console.log(">>>>>>>>>>>> discovery.start js <<<<<<<<<<<<");
+    startDiscovery: function(successCallback, errorCallback) {
         cordova.exec(
             successCallback, // success callback function
             errorCallback, // error callback function
             'Discovery', // mapped to our native Java class called "Discovery"
-            'start', // with this action name
+            'startDiscovery', // with this action name
+            []	 // and this array of custom arguments to create our entry
+        );
+    },
+    stopDiscovery: function(successCallback, errorCallback) {
+        cordova.exec(
+            successCallback, // success callback function
+            errorCallback, // error callback function
+            'Discovery', // mapped to our native Java class called "Discovery"
+            'stopDiscovery', // with this action name
             []	 // and this array of custom arguments to create our entry
         );
     },
@@ -14,7 +22,7 @@ var discovery =  {
             successCallback,
             errorCallback,
             'Discovery',
-            'getNetworkInfo', // with this action name
+            'getNetworkInfo',
             []
         );
     },
@@ -23,7 +31,7 @@ var discovery =  {
             showToastCallback,
             errorCallback,
             'Discovery',
-            'setShowToastCallback', // with this action name
+            'setShowToastCallback',
             []
         );
     }

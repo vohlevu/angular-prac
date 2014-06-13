@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.vohlevu.discovery.utils.NetInfo;
 import com.vohlevu.discovery.utils.HostBean;
 
+import android.util.Log;
+
 final public class Discovery {
 
 	private final String TAG = "Discovery";
@@ -17,10 +19,9 @@ final public class Discovery {
 
 	public Discovery(NetInfo net) {
 		this.net = net;
-		setInfo();
 	}
 	
-	protected void setInfo() {
+	public void setInfo() {
 		// Get ip information
 		network_ip = NetInfo.getUnsignedLongFromIp(net.ip);
 		// Detected IP
@@ -29,7 +30,7 @@ final public class Discovery {
 		network_end = (network_start | ((1 << shift) - 1));
 	}
 
-	protected void cancelTasks() {
+	public void cancelTasks() {
 		if (mDiscoveryTask != null) {
 			mDiscoveryTask.setCancelled(true);
 			mDiscoveryTask = null;
@@ -57,7 +58,7 @@ final public class Discovery {
 	}
 	
 	public void stopDiscovering() {
-		//Log.e(TAG, "stopDiscovering()");
+		Log.i(TAG, "stopDiscovering()");
 		mDiscoveryTask = null;
 	}
 
@@ -66,6 +67,7 @@ final public class Discovery {
 	}
 
 	public void addHost(HostBean host) {
+		showToast("Discovery found ip >>> " + host.ipAddress);
 		hosts.add(host);
 	}
 }

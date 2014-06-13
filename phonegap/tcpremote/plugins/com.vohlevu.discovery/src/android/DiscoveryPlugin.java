@@ -13,13 +13,15 @@ import com.vohlevu.discovery.utils.NetInfo;
 
 public class DiscoveryPlugin extends CordovaPlugin {
 
-	public static final String ACTION_START_ENTRY = "start";
+	public static final String ACTION_START_DISCOVERY_ENTRY = "startDiscovery";
+	public static final String ACTION_STOP_DISCOVERY_ENTRY = "stopDiscovery";
 	public static final String ACTION_GET_NETWORK_INFO_ENTRY = "getNetworkInfo";
 	public static final String ACTION_SET_SHOW_TOAST_CALLBACK_ENTRY = "setShowToastCallback";
 	
 	private static CallbackContext showToastCallback = null;
 	private static CallbackContext progressUpdateCallback = null;
 	private NetInfo net = null;
+	private Discovery discovery = null;
 	
 	public DiscoveryPlugin() {
 	}
@@ -27,13 +29,18 @@ public class DiscoveryPlugin extends CordovaPlugin {
 	@Override
 	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		try {
-			if (ACTION_START_ENTRY.equals(action)) {
-				callbackContext.success("Success...");
+			if (ACTION_START_DISCOVERY_ENTRY.equals(action)) {
 				if (net != null) {
 					progressUpdateCallback = callbackContext;
-					Discovery d = new Discovery(net);
-					d.startDiscovering();
+					if (discovery == null)
+						discovery = new Discovery(net);
+					discovery.setInfo();
+					discovery.startDiscovering();
 				}
+				return true;
+			} else if (ACTION_STOP_DISCOVERY_ENTRY.equals(action)) {
+				if (discovery != null)
+					discovery.cancelTasks();
 				return true;
 			} else if (ACTION_SET_SHOW_TOAST_CALLBACK_ENTRY.equals(action)) {
 				showToastCallback = callbackContext;

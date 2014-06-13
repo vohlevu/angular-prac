@@ -198,7 +198,8 @@ $(document).bind( "pagebeforechange", function( e, data ) {
 		} else if ( u.hash.search(/^#page2/) !== -1 ) {
 			window.discovery.setShowToastCallback(app.showToast, app.stub);
 			window.discovery.getNetworkInfo(app.getNetworkInfo, app.stub);
-			window.discovery.start(app.stub, app.stub);
+			window.discovery.startDiscovery(app.stub, app.stub);
+			isDoingDiscovery = true;
 		} else if ( u.hash.search(/^#page3/) !== -1 ) {
 			//app.showList();
 		}
@@ -217,6 +218,7 @@ window.addEventListener('load', function () {
 // Handle back button press
 var pageHistoryCount = 0;
 var goingBack = false;
+var isDoingDiscovery = false;
 //var stackPage = new Array();
 
 $(document).bind("pageshow", function showPage (e, data) {
@@ -246,6 +248,10 @@ function onPressBack (e) {
 			}
 		}, 'Quit My App', 'Cancel,Ok');
 	} else {
+		if (isDoingDiscovery) {
+			isDoingDiscovery = false;
+			window.discovery.stopDiscovery(app.stub, app.stub);
+		}
 		goingBack = true;
 		console.log("Going back to page #"+pageHistoryCount);
 		//navigator.app.backHistory();
