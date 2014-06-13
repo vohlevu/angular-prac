@@ -4,7 +4,7 @@ import java.lang.ref.WeakReference;
 import android.os.AsyncTask;
 import com.vohlevu.discovery.utils.HostBean;
 
-public /*abstract */class AbstractDiscovery extends AsyncTask<Void, HostBean, Void> {
+public abstract class AbstractDiscovery extends AsyncTask<Void, HostBean, Void> {
 
     protected int hosts_done = 0;
     final protected WeakReference<Discovery> mDiscover;
@@ -25,10 +25,7 @@ public /*abstract */class AbstractDiscovery extends AsyncTask<Void, HostBean, Vo
         this.end = end;
     }
 
-    /*abstract */protected Void doInBackground(Void... params) {
-	
-        return null;
-	}
+    abstract protected Void doInBackground(Void... params);
 
     @Override
     protected void onPreExecute() {
@@ -45,6 +42,7 @@ public /*abstract */class AbstractDiscovery extends AsyncTask<Void, HostBean, Vo
                         discover.addHost(host[0]);
                     }
                     if (size > 0) {
+						discover.updateProgress("Percent : " + Integer.toString((int) (hosts_done * 100 / size)));
 						// Update progress on GUI
                     	/*mProgressDialog.setProgress(hosts_done);
                     	mProgressDialog.setSecondaryProgress((int) (hosts_done * 100 / size));*/
@@ -61,9 +59,9 @@ public /*abstract */class AbstractDiscovery extends AsyncTask<Void, HostBean, Vo
             final Discovery discover = mDiscover.get();
             if (discover != null) {
             	if (flagCancelled) {
-            		//Utils.makeToast(discover, discover.getString(R.string.discover_canceled));
+					discover.showToast("Discovery canceled !");
             	} else {
-            		//Utils.makeToast(discover, discover.getString(R.string.discover_finished));
+					discover.showToast("Discovery finished !");
             	}
             	//mProgressDialog.dismiss();
                 discover.stopDiscovering();

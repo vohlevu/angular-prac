@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 import com.vohlevu.discovery.utils.NetInfo;
 import com.vohlevu.discovery.utils.HostBean;
-import com.vohlevu.discovery.AbstractDiscovery;
 
 final public class Discovery {
 
@@ -18,6 +17,7 @@ final public class Discovery {
 
 	public Discovery(NetInfo net) {
 		this.net = net;
+		setInfo();
 	}
 	
 	protected void setInfo() {
@@ -39,15 +39,23 @@ final public class Discovery {
 	/**
 	 * Discover hosts
 	 */
-	private void startDiscovering() {
-		mDiscoveryTask = new AbstractDiscovery(this);//new DefaultDiscovery(this);
+	public void startDiscovering() {
+		mDiscoveryTask = new DefaultDiscovery(this);
 		mDiscoveryTask.setNetwork(network_ip, network_start, network_end);
 		mDiscoveryTask.execute();
 
-		//Utils.makeToast(this, getString(R.string.discover_start));
+		showToast("Discovery started ...");
 		initList();
 	}
 
+	public void updateProgress(String progressMessage) {
+		DiscoveryPlugin.updateProgress(progressMessage);
+	}
+	
+	public void showToast(String message) {
+		DiscoveryPlugin.showToast(message);
+	}
+	
 	public void stopDiscovering() {
 		//Log.e(TAG, "stopDiscovering()");
 		mDiscoveryTask = null;

@@ -21,11 +21,11 @@
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Vibration\"><param name=\"android-package\" value=\"org.apache.cordova.vibration.Vibration\" /></feature>",
+                            "xml": "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>",
                             "count": 1
                         },
                         {
-                            "xml": "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>",
+                            "xml": "<feature name=\"Vibration\"><param name=\"android-package\" value=\"org.apache.cordova.vibration.Vibration\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -57,18 +57,18 @@
     },
     "installed_plugins": {
         "com.tlantic.plugins.socket": {
-            "PACKAGE_NAME": "com.phonegap.helloworld"
+            "PACKAGE_NAME": "com.vohlevu.stbremote"
         },
         "com.vohlevu.discovery": {
-            "PACKAGE_NAME": "com.phonegap.helloworld"
+            "PACKAGE_NAME": "com.vohlevu.stbremote"
         },
         "nl.x-services.plugins.toast": {
-            "PACKAGE_NAME": "com.phonegap.helloworld"
-        },
-        "org.apache.cordova.vibration": {
             "PACKAGE_NAME": "com.vohlevu.stbremote"
         },
         "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "com.vohlevu.stbremote"
+        },
+        "org.apache.cordova.vibration": {
             "PACKAGE_NAME": "com.vohlevu.stbremote"
         }
     },

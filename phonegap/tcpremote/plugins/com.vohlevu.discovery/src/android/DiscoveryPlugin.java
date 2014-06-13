@@ -18,6 +18,8 @@ public class DiscoveryPlugin extends CordovaPlugin {
 	public static final String ACTION_SET_SHOW_TOAST_CALLBACK_ENTRY = "setShowToastCallback";
 	
 	private static CallbackContext showToastCallback = null;
+	private static CallbackContext progressUpdateCallback = null;
+	private NetInfo net = null;
 	
 	public DiscoveryPlugin() {
 	}
@@ -27,6 +29,11 @@ public class DiscoveryPlugin extends CordovaPlugin {
 		try {
 			if (ACTION_START_ENTRY.equals(action)) {
 				callbackContext.success("Success...");
+				if (net != null) {
+					progressUpdateCallback = callbackContext;
+					Discovery d = new Discovery(net);
+					d.startDiscovering();
+				}
 				return true;
 			} else if (ACTION_SET_SHOW_TOAST_CALLBACK_ENTRY.equals(action)) {
 				showToastCallback = callbackContext;
@@ -49,7 +56,7 @@ public class DiscoveryPlugin extends CordovaPlugin {
 	private JSONObject loadData(Context context) {
 		JSONObject obj = new JSONObject();
 		try {
-			NetInfo net = new NetInfo(context);
+			net = new NetInfo(context);
 			net.getWifiInfo();
 			if (net.ssid != null) {
 				net.getIp();
@@ -70,6 +77,14 @@ public class DiscoveryPlugin extends CordovaPlugin {
 			PluginResult result = new PluginResult(PluginResult.Status.OK, message);
 			result.setKeepCallback(true);
 			showToastCallback.sendPluginResult(result);
+		}
+	}
+	
+	public static void updateProgress(String message) {
+		if (progressUpdateCallback != null) {
+			PluginResult result = new PluginResult(PluginResult.Status.OK, message);
+			result.setKeepCallback(true);
+			progressUpdateCallback.sendPluginResult(result);
 		}
 	}
 }

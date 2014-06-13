@@ -125,8 +125,9 @@ function app() {
     };
 	
     oApp.showToast = function(message) {
+		console.log('index.js >> showToast : ' + message)
 		window.plugins.toast.show(message, 'short', 'bottom', 
-				function(a){console.log('toast success: ' + a)},
+				function(a){/*console.log('toast success: ' + a)*/},
 				function(b){console.log('toast error: ' + b)});
 	};
 	
@@ -195,9 +196,9 @@ $(document).bind( "pagebeforechange", function( e, data ) {
 		if ( u.hash.search(/^#page1/) !== -1 ) {
 			app.connect();
 		} else if ( u.hash.search(/^#page2/) !== -1 ) {
-			window.discovery.start(app.stub, app.stub);
 			window.discovery.setShowToastCallback(app.showToast, app.stub);
 			window.discovery.getNetworkInfo(app.getNetworkInfo, app.stub);
+			window.discovery.start(app.stub, app.stub);
 		} else if ( u.hash.search(/^#page3/) !== -1 ) {
 			//app.showList();
 		}

@@ -28,6 +28,7 @@
         <source-file src="src/android/DiscoveryPlugin.java" target-dir="src/com/vohlevu/discovery" />
         <source-file src="src/android/Discovery.java" target-dir="src/com/vohlevu/discovery" />
         <source-file src="src/android/AbstractDiscovery.java" target-dir="src/com/vohlevu/discovery" />
+        <source-file src="src/android/DefaultDiscovery.java" target-dir="src/com/vohlevu/discovery" />
         <source-file src="src/android/utils/NetInfo.java" target-dir="src/com/vohlevu/discovery/utils" />
         <source-file src="src/android/utils/HostBean.java" target-dir="src/com/vohlevu/discovery/utils" />
      </platform>          
